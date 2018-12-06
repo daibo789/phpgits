@@ -10,13 +10,23 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\Session;
 
 use DB;
-
+use Ramsey\Uuid\Uuid;
 class CommonController
 {
 
     public function __construct()
     {
 
+    }
+
+    /**获取用户token 可以传useid
+     * @param string $useid
+     * @return mixed
+     */
+    public function getUserToken($useid = ''){
+        $data = Uuid::uuid1();
+        $str = $data->getHex();    //32位字符串方法
+        return $str;
     }
 
     /**

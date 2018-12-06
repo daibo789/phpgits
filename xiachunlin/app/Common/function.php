@@ -143,6 +143,129 @@ function logic($name = '', $config = [])
     return $instance[$guid];
 }
 
+/**
+ * 实例化（分层）模型
+ * @param $name 模型类名称
+ * @param array $config 配置
+ * @return object
+ */
+function model($name = '', $config = [])
+{
+    static $instance = [];
+    $guid = $name . 'Model';
+    if (!isset($instance[$guid]))
+    {
+        $class = '\\App\\Model\\' . ucfirst($name);
+        if (class_exists($class))
+        {
+            $model = new $class($config);
+            $instance[$guid] = $model;
+        }
+        else
+        {
+            throw new Exception('class not exists:' . $class);
+        }
+    }
+
+    return $instance[$guid];
+}
+
+
+//获取表所有字段
+function get_table_columns($table, $field='')
+{
+    $res = \Illuminate\Support\Facades\Schema::getColumnListing($table);
+
+    if($field != '')
+    {
+        //判断字段是否在表里面
+        if(in_array($field, $res))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    return $res;
+}
+
+//将栏目列表生成数组
+function get_category($modelname, $parent_id=0, $pad=0)
+{
+    $arr = array();
+
+    $temp = \DB::table($modelname)->where('pid', $parent_id);
+    if(get_table_columns($modelname, 'listorder'))
+    {
+        $temp = $temp->orderBy('listorder', 'asc');
+    }
+    else
+    {
+        $temp = $temp->orderBy('id', 'asc');
+    }
+
+    $temp = $temp->get();
+
+    $cats = object_to_array($temp);
+
+    if($cats)
+    {
+        foreach($cats as $row)//循环数组
+        {
+            $row['deep'] = $pad;
+
+            if($child = get_category($modelname, $row["id"], $pad+1))//如果子级不为空
+            {
+                $row['child'] = $child;
+            }
+
+            $arr[] = $row;
+        }
+
+        return $arr;
+    }
+}
+
+function category_tree($list,$pid=0)
+{
+    global $temp;
+
+    if(!empty($list))
+    {
+        foreach($list as $v)
+        {
+            $temp[] = array("id"=>$v['id'],"deep"=>$v['deep'],"name"=>$v['name'],"pid"=>$v['pid']);
+            //echo $v['id'];
+            if(array_key_exists("child",$v))
+            {
+                category_tree($v['child'],$v['pid']);
+            }
+        }
+    }
+
+    return $temp;
+}
+
+//递归获取面包屑导航
+function get_cat_path($cat,$table='arctype',$type='list')
+{
+    global $temp;
+
+    $row = \DB::table($table)->select('name','pid','id')->where('id',$cat)->first();
+
+    $temp = '<a href="'.get_front_url(array("catid"=>$row->id,"type"=>$type)).'">'.$row->name."</a> > ".$temp;
+
+    if($row->pid<>0)
+    {
+        get_cat_path($row->pid, $table, $type);
+    }
+
+    return $temp;
+}
+
 
 /**
  * 操作错误跳转的快捷方法

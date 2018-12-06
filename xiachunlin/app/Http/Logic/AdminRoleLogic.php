@@ -124,7 +124,7 @@ class AdminRoleLogic extends BaseLogic
         if($res)
         {
             //删除菜单
-            model('Access')->del(['role_id'=>$where['id']]);
+            model('Admin\\Access')->del(['role_id'=>$where['id']]);
             
             return ReturnData::create(ReturnData::SUCCESS,$res);
         }

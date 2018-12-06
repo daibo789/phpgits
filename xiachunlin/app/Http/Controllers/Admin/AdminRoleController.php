@@ -112,10 +112,11 @@ class AdminRoleController extends CommonController
     //角色权限设置视图
     public function permissions()
     {
+
         if(!empty($_GET["id"])){$data['role_id'] = $_GET["id"];}else{error_jump('您访问的页面不存在或已被删除');}
 
         $menu = [];
-        $access = model('Access')->getAll(['role_id'=>$data['role_id']]);
+        $access = model('Admin\\Access')->getAll(['role_id'=>$data['role_id']]);
         if($access)
         {
             foreach($access as $k=>$v)
@@ -124,7 +125,7 @@ class AdminRoleController extends CommonController
             }
         }
 
-        $data['menus'] = category_tree(get_category('menu',0));
+        $data['menus'] = category_tree(get_category('menus',0));
         foreach($data['menus'] as $k=>$v)
         {
             $data['menus'][$k]['is_access'] = 0;
@@ -158,9 +159,9 @@ class AdminRoleController extends CommonController
         }
 
         DB::beginTransaction();
-        model('Access')->del(['role_id'=>$_POST['role_id']]);
+        model('Admin\\Access')->del(['role_id'=>$_POST['role_id']]);
 
-        if(model('Access')->add($menus, 1))
+        if(model('Admin\\Access')->add($menus, 1))
         {
             DB::commit();
             success_jump('操作成功');

@@ -7,7 +7,7 @@ use DB;
 use Log;
 class Menu extends BaseModel
 {
-    protected $table = 'menu';
+    protected $table = 'menus';
     public $timestamps = false;
     protected $hidden = array();
     protected $guarded = array(); //$guarded包含你不想被赋值的字段数组。

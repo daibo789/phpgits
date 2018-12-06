@@ -1,18 +1,19 @@
 <?php
 
 namespace App\Model\Admin;
-
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Model\BaseModel;
 use DB;
-class Access extends Model
+class User extends BaseModel
 {
     //
-    //轮播图
+    //用户模型
 
-    protected $table = 'accesses';
+    protected $table = 'users';
     public $timestamps = false;
-    protected $hidden = array();
-    protected $guarded = array(); //$guarded包含你不想被赋值的字段数组。
+    protected $hidden = array('password','pay_password');
+    protected $guarded = []; //$guarded包含你不想被赋值的字段数组。
+
+    const USER_NORMAL_STATUS = 1; //用户状态 0待审 1正常状态 2 删除至回收站 3锁定
 
     public function getDb()
     {
@@ -162,5 +163,35 @@ class Access extends Model
         $res = $res->where($where)->delete();
 
         return $res;
+    }
+
+    /**
+     * 获取关联到用户的角色
+     */
+    public function userrole()
+    {
+        return $this->belongsTo(UserRole::class, 'role_id', 'id');
+    }
+
+    //性别1男2女
+    public function getSexAttr($data)
+    {
+        $arr = [0 => '未知', 1 => '男', 2 => '女'];
+        return $arr[$data->sex];
+    }
+
+    //用户状态 1正常状态 2 删除至回收站 3锁定
+    public function getStatusAttr($data)
+    {
+        $arr = [1 => '正常', 2 => '删除', 3 => '锁定'];
+        return $arr[$data->status];
+    }
+
+    /**
+     * 打印sql
+     */
+    public function toSql($where)
+    {
+        return $this->getDb()->where($where)->toSql();
     }
 }
