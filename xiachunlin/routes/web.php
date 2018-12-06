@@ -16,3 +16,4 @@ Route::get('/', function () {
 });
 
 include_once 'admin/web.php';
+include_once 'home/web.php';

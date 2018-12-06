@@ -27,12 +27,12 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
-            //\App\Http\Middleware\EncryptCookies::class,                       //禁用，FLi
+            \App\Http\Middleware\EncryptCookies::class,                       //禁用，FLi
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            //\Illuminate\Session\Middleware\StartSession::class,               //禁用，FLi
-            // \Illuminate\Session\Middleware\AuthenticateSession::class,
-            //\Illuminate\View\Middleware\ShareErrorsFromSession::class,        //禁用，FLi
-            // \App\Http\Middleware\VerifyCsrfToken::class,                     //禁用VerifyCsrfToken，FLi
+            \Illuminate\Session\Middleware\StartSession::class,               //禁用，FLi
+             \Illuminate\Session\Middleware\AuthenticateSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,        //禁用，FLi
+             \App\Http\Middleware\VerifyCsrfToken::class,                     //禁用VerifyCsrfToken，FLi
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
@@ -56,5 +56,7 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'admin.auth' => \App\Http\Middleware\CheckAdminMiddleware::class,
+
     ];
 }
