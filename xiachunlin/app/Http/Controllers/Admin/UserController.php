@@ -36,13 +36,13 @@ class UserController extends CommonController
             $where['user_id'] = $_REQUEST["user_id"];
         }
 
-        $posts = parent::pageList('user_money',$where);
+        $posts = parent::pageList('user_moneys',$where);
 
         if($posts)
         {
             foreach($posts as $k=>$v)
             {
-                $posts[$k]->user = DB::table('user')->where('id', $v->user_id)->first();
+                $posts[$k]->user = DB::table('users')->where('id', $v->user_id)->first();
             }
         }
 
@@ -61,12 +61,12 @@ class UserController extends CommonController
 
             if($_POST["money"]>0)
             {
-                DB::table('user')->where(['id'=>$_POST["id"]])->increment('money', $_POST["money"]);
+                DB::table('users')->where(['id'=>$_POST["id"]])->increment('money', $_POST["money"]);
                 $user_money['type'] = 0;
             }
             else
             {
-                DB::table('user')->where(['id'=>$_POST["id"]])->decrement('money', abs($_POST["money"]));
+                DB::table('users')->where(['id'=>$_POST["id"]])->decrement('money', abs($_POST["money"]));
                 $user_money['type'] = 1;
             }
 
@@ -74,15 +74,15 @@ class UserController extends CommonController
             $user_money['add_time'] = time();
             $user_money['money'] = abs($_POST["money"]);
             $user_money['des'] = '后台充值';
-            $user_money['user_money'] = DB::table('user')->where(array('id'=>$_POST["id"]))->value('money');
+            $user_money['user_money'] = DB::table('users')->where(array('id'=>$_POST["id"]))->value('money');
 
             //添加用户余额记录
-            DB::table('user_money')->insert($user_money);
+            DB::table('user_moneys')->insert($user_money);
 
             success_jump('操作成功', route('admin_user'));
         }
 
-        $data['user'] = object_to_array(DB::table('user')->select('user_name', 'mobile', 'money', 'id')->where('id', $_REQUEST["user_id"])->first(), 1);
+        $data['user'] = object_to_array(DB::table('users')->select('user_name', 'mobile', 'money', 'id')->where('id', $_REQUEST["user_id"])->first(), 1);
         if(!$data['user']){error_jump('参数错误');}
 
         return view('admin.user.manualRecharge', $data);
@@ -146,7 +146,7 @@ class UserController extends CommonController
     {
         if(!empty($_GET["id"])){$id = $_GET["id"];}else{error_jump('删除失败！请重新提交');}
 
-        if(DB::table('user')->whereIn("id", explode(',', $id))->update(['status' => 2]))
+        if(DB::table('users')->whereIn("id", explode(',', $id))->update(['status' => 2]))
         {
             success_jump('删除成功');
         }

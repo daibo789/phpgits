@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('admin.layouts.main')
 @section('title', '账户记录列表')
 
 @section('content')

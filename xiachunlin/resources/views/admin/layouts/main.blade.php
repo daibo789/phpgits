@@ -3,6 +3,7 @@
     <title>@yield('title')_后台管理</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="/back/css/bootstrap.min.css">
     <link rel="stylesheet" href="/back/css/admin.css">
     <script src="/back/js/jquery.min.js"></script>
