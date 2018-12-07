@@ -1,10 +1,10 @@
-@extends('admin.layouts.app')
+@extends('admin.layouts.main')
 @section('title', '文章修改')
 
 @section('content')
-<h5 class="sub-header"><a href="/fladmin/article">文章列表</a> > 修改文章</h5>
+<h5 class="sub-header"><a href="/admin/article">文章列表</a> > 修改文章</h5>
 
-<form id="addarc" method="post" action="/fladmin/article/doedit" role="form" enctype="multipart/form-data" class="table-responsive">{{ csrf_field() }}
+<form id="addarc" method="post" action="/admin/article/doedit" role="form" enctype="multipart/form-data" class="table-responsive">{{ csrf_field() }}
 <table class="table table-striped table-bordered">
 <tbody>
     <tr>
@@ -72,7 +72,7 @@ function upImage()
         <td align="right">文章栏目：</td>
         <td>
             <select name="typeid" id="typeid">
-                <?php $catlist = category_tree(get_category('arctype',0));foreach($catlist as $row){
+                <?php $catlist = category_tree(get_category('arctypes',0));foreach($catlist as $row){
                     if($row["id"]==$post["typeid"]){ ?>
                 <option selected="selected" value="<?php echo $row["id"]; ?>"><?php for($i=0;$i<$row["deep"];$i++){echo "—";}echo $row["name"]; ?></option>
                     <?php }else{ ?>

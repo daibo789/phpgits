@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Logic;
 use App\Common\ReturnData;
-use App\Http\Model\Article;
+use App\Model\Admin\Article;
 use App\Http\Requests\ArticleRequest;
 use Validator;
 
@@ -14,7 +14,7 @@ class ArticleLogic extends BaseLogic
     
     public function getModel()
     {
-        return model('Article');
+        return model('Admin\\Article');
     }
     
     public function getValidate($data, $scene_name)
@@ -45,7 +45,7 @@ class ArticleLogic extends BaseLogic
     public function getPaginate($where = array(), $order = '', $field = '*', $limit = '')
     {
         $res = $this->getModel()->getPaginate($where, $order, $field, $limit);
-        
+
         if($res->count() > 0)
         {
             foreach($res as $k=>$v)

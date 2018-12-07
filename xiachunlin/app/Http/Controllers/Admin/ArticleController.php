@@ -4,18 +4,17 @@ use DB;
 use App\Common\ReturnData;
 use Illuminate\Http\Request;
 use App\Http\Logic\ArticleLogic;
+use Intervention\Image\Facades\Image as ImageManager;
 
 class ArticleController extends CommonController
 {
-    public function __construct()
+    protected $articleLogic;
+    public function __construct(ArticleLogic $articleLogic)
     {
         parent::__construct();
+        $this->articleLogic = $articleLogic;
     }
-	
-    public function getLogic()
-    {
-        return new ArticleLogic();
-    }
+
     
 	public function index()
     {
@@ -41,11 +40,8 @@ class ArticleController extends CommonController
 				$query->where('ischeck', $_REQUEST["ischeck"]); //未审核过的文章
 			}
         };
-		
-        $posts = $this->getLogic()->getPaginate($where, array('id', 'desc'));
-		
+        $posts = $this->articleLogic->getPaginate($where, array('id', 'desc'));
         $data['posts'] = $posts;
-		
 		return view('admin.article.index', $data);
 		
         //if(!empty($_GET["id"])){$id = $_GET["id"];}else {$id="";}if(preg_match('/[0-9]*/',$id)){}else{exit;}
@@ -86,10 +82,11 @@ class ArticleController extends CommonController
     
     public function doadd()
     {
+        $admin_user_info =  session('admin_user_info');
         $litpic="";if(!empty($_POST["litpic"])){$litpic = $_POST["litpic"];}else{$_POST['litpic']="";} //缩略图
         if(empty($_POST["description"])){if(!empty($_POST["body"])){$_POST['description']=cut_str($_POST["body"]);}} //description
         $content="";if(!empty($_POST["body"])){$content = $_POST["body"];}
-        $_POST['user_id'] = $_SESSION['admin_user_info']['id']; // 发布者id
+        $_POST['user_id'] = $admin_user_info['id']; // 发布者id
         
 		//关键词
         if(!empty($_POST["keywords"]))
@@ -122,16 +119,16 @@ class ArticleController extends CommonController
 				preg_match_all ("/\/(.+)\.(gif|jpg|jpeg|bmp|png)$/iU",$imagepath,$out, PREG_PATTERN_ORDER);
 				
 				$saveimage='./uploads/'.date('Y/m',time()).'/'.basename($imagepath,'.'.$out[2][0]).'-lp.'.$out[2][0];
-				
+
 				//生成缩略图，按照原图的比例生成一个最大为240*180的缩略图
-				\Intervention\Image\Facades\Image::make($imagepath)->resize(sysconfig('CMS_IMGWIDTH'), sysconfig('CMS_IMGHEIGHT'))->save($saveimage);
+                ImageManager::make($imagepath)->resize(sysconfig('CMS_IMGWIDTH'), sysconfig('CMS_IMGHEIGHT'))->save($saveimage);
 				
 				//缩略图路径
 				$_POST['litpic']='/uploads/'.date('Y/m',time()).'/'.basename($imagepath,'.'.$out[2][0]).'-lp.'.$out[2][0];
 			}
 		}
 
-		$res = $this->getLogic()->add($_POST);
+		$res = $this->articleLogic->add($_POST);
 		if($res['code']==ReturnData::SUCCESS)
 		{
 			success_jump($res['msg'], route('admin_article'));
@@ -147,7 +144,7 @@ class ArticleController extends CommonController
         if(!empty($_GET["id"])){$id = $_GET["id"];}else {$id="";}if(preg_match('/[0-9]*/',$id)){}else{exit;}
         
 		$data['id'] = $id;
-		$data['post'] = object_to_array($this->getLogic()->getOne(['id'=>$id]), 1);
+		$data['post'] = object_to_array($this->articleLogic->getOne(['id'=>$id]), 1);
         
         return view('admin.article.edit', $data);
     }
@@ -191,14 +188,14 @@ class ArticleController extends CommonController
 				$saveimage='./uploads/'.date('Y/m',time()).'/'.basename($imagepath,'.'.$out[2][0]).'-lp.'.$out[2][0];
 				
 				//生成缩略图，按照原图的比例生成一个最大为240*180的缩略图
-				\Intervention\Image\Facades\Image::make($imagepath)->resize(sysconfig('CMS_IMGWIDTH'), sysconfig('CMS_IMGHEIGHT'))->save($saveimage);
+				ImageManager::make($imagepath)->resize(sysconfig('CMS_IMGWIDTH'), sysconfig('CMS_IMGHEIGHT'))->save($saveimage);
 				
 				//缩略图路径
 				$_POST['litpic']='/uploads/'.date('Y/m',time()).'/'.basename($imagepath,'.'.$out[2][0]).'-lp.'.$out[2][0];
 			}
 		}
 
-		$res = $this->getLogic()->edit($_POST,array('id'=>$id));
+		$res = $this->articleLogic->edit($_POST,array('id'=>$id));
 		if($res['code']==ReturnData::SUCCESS)
 		{
 			success_jump($res['msg'], route('admin_article'));
@@ -228,7 +225,7 @@ class ArticleController extends CommonController
 	//重复文章列表
     public function repetarc()
     {
-		$data['posts'] = object_to_array(DB::table('article')->select(DB::raw('title,count(*) AS count'))->orderBy('count', 'desc')->groupBy('title')->having('count', '>', 1)->get());
+		$data['posts'] = object_to_array(DB::table('articles')->select(DB::raw('title,count(*) AS count'))->orderBy('count', 'desc')->groupBy('title')->having('count', '>', 1)->get());
 		
         return view('admin.article.repetarc', $data);
     }

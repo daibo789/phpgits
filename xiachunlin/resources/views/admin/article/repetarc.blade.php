@@ -1,8 +1,8 @@
-@extends('admin.layouts.app')
+@extends('admin.layouts.main')
 @section('title', '重复文档列表')
 
 @section('content')
-<h2 class="sub-header">重复文档列表</h2>[ <a href="/fladmin/article">文章列表</a> ] [ <a href="/fladmin/article/add">发布文章</a> ]<br><br>
+<h2 class="sub-header">重复文档列表</h2>[ <a href="/admin/article">文章列表</a> ] [ <a href="/admin/article/add">发布文章</a> ]<br><br>
 
 <form name="listarc">
 <div class="table-responsive"><table class="table table-striped table-hover">
@@ -13,7 +13,7 @@
 <tbody>
 <?php if($posts){ foreach ($posts as $row) { ?>
 <tr>
-    <td><a href="/fladmin/article/index?typeid=0&keyword=<?php echo $row["title"]; ?>"><?php echo $row["title"]; ?></a></td>
+    <td><a href="/admin/article/index?typeid=0&keyword=<?php echo $row["title"]; ?>"><?php echo $row["title"]; ?></a></td>
     <td><?php echo $row["count"]; ?></td>
 </tr>
 <?php }} ?>

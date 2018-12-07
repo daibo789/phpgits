@@ -267,6 +267,115 @@ function get_cat_path($cat,$table='arctype',$type='list')
 }
 
 
+//PhpAnalysis获取中文分词
+function get_keywords($keyword)
+{
+    require_once(resource_path('org/phpAnalysis/phpAnalysis.php'));
+    //import("Vendor.phpAnalysis.phpAnalysis");
+    //初始化类
+    PhpAnalysis::$loadInit = false;
+    $pa = new PhpAnalysis('utf-8', 'utf-8', false);
+    //载入词典
+    $pa->LoadDict();
+    //执行分词
+    $pa->SetSource($keyword);
+    $pa->StartAnalysis( false );
+    $keywords = $pa->GetFinallyResult(',');
+
+    return ltrim($keywords, ",");
+}
+
+//pc前台栏目、标签、内容页面地址生成
+function get_front_url($param='')
+{
+    $url = '';
+
+    if($param['type'] == 'list')
+    {
+        //列表页
+        $url .= '/cat'.$param['catid'];
+    }
+    else if($param['type'] == 'content')
+    {
+        //内容页
+        $url .= '/p/'.$param['id'];
+    }
+    else if($param['type'] == 'tags')
+    {
+        //tags页面
+        $url .= '/tag'.$param['tagid'];
+    }
+    else if($param['type'] == 'page')
+    {
+        //单页面
+        $url .= '/page/'.$param['pagename'];
+    }
+    else if($param['type'] == 'search')
+    {
+        //搜索关键词页面
+        $url .= '/s'.$param['searchid'];
+    }
+    else if($param['type'] == 'goodslist')
+    {
+        //商品列表页
+        $url .= '/product'.$param['catid'];
+    }
+    else if($param['type'] == 'goodsdetail')
+    {
+        //商品内容页
+        $url .= '/goods/'.$param['id'];
+    }
+
+    return $url;
+}
+
+//判断是否是图片格式，是返回true
+function imgmatch($url)
+{
+    $info = pathinfo($url);
+    if (isset($info['extension']))
+    {
+        if (($info['extension'] == 'jpg') || ($info['extension'] == 'jpeg') || ($info['extension'] == 'gif') || ($info['extension'] == 'png'))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+
+
+//获取二维码
+function get_erweima($url='',$size=150)
+{
+    return 'data:image/png;base64,'.base64_encode(\QrCode::format('png')->encoding('UTF-8')->size($size)->margin(0)->errorCorrection('H')->generate($url));
+}
+
+//根据栏目id获取栏目信息
+function typeinfo($typeid)
+{
+    return db("arctype")->where("id=$typeid")->find();
+}
+
+//根据栏目id获取该栏目下文章/商品的数量
+function catarcnum($typeid, $modelname='article')
+{
+    $map['typeid']=$typeid;
+    return \DB::table($modelname)->where($map)->count('id');
+}
+
+//根据Tag id获取该Tag标签下文章的数量
+function tagarcnum($tagid)
+{
+    $taglist = \DB::table("taglist");
+    if(!empty($tagid)){$map['tid']=$tagid; $taglist = $taglist->where($map);}
+    return $taglist->count();
+}
+
+
+
 /**
  * 操作错误跳转的快捷方法
  * @access protected

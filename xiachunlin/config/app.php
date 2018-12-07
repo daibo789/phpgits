@@ -181,6 +181,7 @@ return [
          */
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         'Maatwebsite\Excel\ExcelServiceProvider', //Excel导入导出 By FLi
+        Intervention\Image\ImageServiceProvider::class
     ],
 
     /*
@@ -231,6 +232,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

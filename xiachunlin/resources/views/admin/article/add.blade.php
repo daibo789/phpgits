@@ -1,10 +1,10 @@
-@extends('admin.layouts.app')
+@extends('admin.layouts.main')
 @section('title', '发布文章')
 
 @section('content')
-<h5 class="sub-header"><a href="/fladmin/article">文章列表</a> > 发布文章</h5>
+<h5 class="sub-header"><a href="/admin/article">文章列表</a> > 发布文章</h5>
 
-<form id="addarc" method="post" action="/fladmin/article/doadd" role="form" enctype="multipart/form-data" class="table-responsive">{{ csrf_field() }}
+<form id="addarc" method="post" action="/admin/article/doadd" role="form" enctype="multipart/form-data" class="table-responsive">{{ csrf_field() }}
 <table class="table table-striped table-bordered">
 <tbody>
     <tr>
@@ -71,7 +71,7 @@ function upImage()
         <td align="right">文章栏目：</td>
         <td>
 			<select name="typeid" id="typeid">
-                <?php $catlist = category_tree(get_category('arctype',0));foreach($catlist as $row){
+                <?php $catlist = category_tree(get_category('arctypes',0));foreach($catlist as $row){
                     if($row["id"]==$catid){ ?>
                 <option selected="selected" value="<?php echo $row["id"]; ?>"><?php for($i=0;$i<$row["deep"];$i++){echo "—";}echo $row["name"]; ?></option>
                     <?php }else{ ?>
@@ -103,8 +103,8 @@ function upImage()
     <tr>
         <td colspan="2">
 <!-- 加载编辑器的容器 --><script id="container" name="body" type="text/plain"></script>
-<!-- 配置文件 --><script type="text/javascript" src="/other/flueditor/ueditor.config.js"></script>
-<!-- 编辑器源码文件 --><script type="text/javascript" src="/other/flueditor/ueditor.all.min.js"></script>
+<!-- 配置文件 --><script type="text/javascript" src="/vendor/flueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 --><script type="text/javascript" src="/vendor/flueditor/ueditor.all.min.js"></script>
 <!-- 实例化编辑器 --><script type="text/javascript">var ue = UE.getEditor('container',{maximumWords:100000,initialFrameHeight:320,enableAutoSave:false});</script></td>
     </tr>
     <tr>
