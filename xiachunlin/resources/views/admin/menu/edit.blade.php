@@ -1,10 +1,10 @@
-@extends('admin.layouts.app')
+@extends('admin.layouts.main')
 @section('title', '菜单修改')
 
 @section('content')
-<h5 class="sub-header"><a href="/fladmin/menu">菜单列表</a> > 菜单修改</h5>
+<h5 class="sub-header"><a href="/admin/menu">菜单列表</a> > 菜单修改</h5>
 
-<form id="addarc" method="post" action="/fladmin/menu/doedit" role="form" enctype="multipart/form-data" class="table-responsive">{{ csrf_field() }}
+<form id="addarc" method="post" action="/admin/menu/doedit" role="form" enctype="multipart/form-data" class="table-responsive">{{ csrf_field() }}
 <table class="table table-striped table-bordered">
 <tbody>
     <tr>

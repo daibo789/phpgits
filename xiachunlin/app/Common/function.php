@@ -369,7 +369,7 @@ function catarcnum($typeid, $modelname='article')
 //根据Tag id获取该Tag标签下文章的数量
 function tagarcnum($tagid)
 {
-    $taglist = \DB::table("taglist");
+    $taglist = \DB::table("taglists");
     if(!empty($tagid)){$map['tid']=$tagid; $taglist = $taglist->where($map);}
     return $taglist->count();
 }
@@ -428,4 +428,105 @@ function success_jump($msg='', $url='', $time=1)
         $str = "<meta http-equiv='Refresh' content='URL=".route('admin_jump')."?message=$msg&url=$url&time=$time"."'>";
         exit($str);
     }
+}
+
+
+
+
+/**
+ * 获取文章列表
+ * @param int $tuijian=0 推荐等级
+ * @param int $typeid=0 分类
+ * @param int $image=1 是否存在图片
+ * @param int $row=10 需要返回的数量
+ * @param string $orderby='id desc' 排序，默认id降序，随机rand()
+ * @param string $limit='0,10' 如果存在$row，$limit就无效
+ * @return string
+ */
+function arclist(array $param)
+{
+    $modelname = 'articles';
+    if(isset($param['table'])){$modelname = $param['table'];}
+
+    $model = \DB::table($modelname);
+
+    $size = sysconfig('CMS_PAGESIZE');$page = 1;$skip = 0;
+    if(isset($param['limit'])){$limit=explode(',',$param['limit']); $skip = $limit[0]; $size = $limit[1];}else{if(isset($param['row'])){$size = $param['row'];}} // 参数格式：$param['limit'] = '2,10';$param['row'] = 10;
+
+    //查询条件
+    $where = function ($query) use ($param) {
+        if(isset($param['tuijian']))
+        {
+            if(is_array($param['tuijian']))
+            {
+                $query->where('tuijian', $param['tuijian'][0], $param['tuijian'][1]);
+            }
+            else
+            {
+                $query->where('tuijian', $param['tuijian']);
+            }
+        }
+
+        if(isset($param['expression']))
+        {
+            foreach($param['expression'] as $row)
+            {
+                $query->where($row[0], $row[1], $row[2]);
+            }
+        }
+
+        if(isset($param['typeid']))
+        {
+            $query->where('typeid', $param["typeid"]);
+        }
+
+        if(isset($param['image']))
+        {
+            $query->where('litpic', '<>', '');
+        }
+    };
+
+    if(!empty($where)){$model = $model->where($where);}
+
+    //原生sql
+    if(isset($param['sql']))
+    {
+        $model = $model->whereRaw($param['sql']);
+    }
+
+    //排序
+    if(isset($param['orderby']))
+    {
+        $orderby = $param['orderby'];
+
+        if($orderby == 'rand()')
+        {
+            $model = $model->orderBy(\DB::raw('rand()'));
+        }
+        else
+        {
+            if(count($orderby) == count($orderby, 1))
+            {
+                $model = $model->orderBy($orderby[0], $orderby[1]);
+            }
+            else
+            {
+                foreach($orderby as $row)
+                {
+                    $model = $model->orderBy($row[0], $row[1]);
+                }
+            }
+        }
+    }
+    else
+    {
+        $model = $model->orderBy('id', 'desc');
+    }
+
+    //要返回的字段
+    if(isset($param['field'])){$model = $model->select(\DB::raw($param['field']));}
+
+    if($skip==0){$skip = ($page-1)*$size;}
+
+    return object_to_array($model->skip($skip)->take($size)->get());
 }
