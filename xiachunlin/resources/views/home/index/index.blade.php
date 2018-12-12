@@ -2,13 +2,14 @@
 @extends('home.layouts.main')
 @section('header')
     <li id="nav_home" class="active"><a href="/h" title="Home">首页</a></li>
-    <li><a id="nav_about" href="/h/about">关于我们</a></li>
-    <li><a id="nav_staff" href="/h/staff">员工</a></li>
-    <li><a id="nav_contact" href="/h/contact">联系我们</a></li>
+    <li><a id="nav_about" href="/about">关于我们</a></li>
+    <li><a id="nav_staff" href="/staff">员工</a></li>
+    <li><a id="nav_contact" href="/contact">联系我们</a></li>
 @endsection
 <!--标题-->
 @section('styles')
 @section('scripts')
+
 
 <!--引入占位符区域-->
 @section('content')
@@ -17,27 +18,9 @@
             <section class="slider">
                 <div class="flexslider carousel">
                     <ul class="slides">
-                        <li>
-                            <img src="/home/images/thumbnail-slider-1.jpg" />
-                        </li>
-                        <li>
-                            <img src="/home/images/thumbnail-slider-2.jpg" />
-                        </li>
-                        <li>
-                            <img src="/home/images/thumbnail-slider-3.jpg" />
-                        </li>
-                        <li>
-                            <img src="/home/images/thumbnail-slider-4.jpg" />
-                        </li>
-                        <li>
-                            <img src="/home/images/thumbnail-slider-5.jpg" />
-                        </li>
-                        <li>
-                            <img src="/home/images/thumbnail-slider-6.jpg" />
-                        </li>
-                        <li>
-                            <img src="/home/images/thumbnail-slider-8.jpg" />
-                        </li>
+                        @foreach ($slide_list as $user)
+                            <li><a href="#"><img src="{{ $user['pic'] }}"/></a></li>
+                        @endforeach
                     </ul>
                 </div>
             </section>
@@ -84,14 +67,13 @@
                 <div class="sidebar">
                     <div class="side_bar">
                         <h2>Catogories</h2>
-                        <p class="top"><a href=""><img src="/home/images/art-pic1.jpg" alt="">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi aliquip consequat.</a></p>
-                        <p class="top"><a href=""><img src="/home/images/art-pic2.jpg" alt="">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi aliquip consequat.</a></p>
-                        <p class="top"><a href=""><img src="/home/images/art-pic3.jpg" alt="">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi aliquip consequat.</a></p>
-                        <p class="top"><a href=""><img src="/home/images/art-pic4.jpg" alt="">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi aliquip consequat.</a></p>
+                        @foreach ($arctype_list as $arctype)
+                            <p class="top"><a href="#"><img style="width: 10%" src="{{$arctype->litpic}}" alt="">{{$arctype->description}}</a></p>
+                        @endforeach
                     </div>
                     <div class="side_bar1">
                         <h2>Testimonials</h2>
-                        <p class="top">But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account</p>
+                        <p class="top">我们的夏老师最牛逼</p>
                         <p class="side_bar1_bg"></p>
                     </div>
                 </div>

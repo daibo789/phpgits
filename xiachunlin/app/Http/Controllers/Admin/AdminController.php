@@ -42,6 +42,7 @@ class AdminController extends CommonController
 
         $posts = $this->adminLogic->getPaginate($where, array('id', 'desc'));
         $data['posts'] = $posts;
+
         return view('admin.admin.index', $data);
     }
 

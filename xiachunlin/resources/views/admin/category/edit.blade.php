@@ -2,9 +2,9 @@
 @section('title', '栏目修改')
 
 @section('content')
-<h5 class="sub-header"><a href="/fladmin/category">栏目管理</a> > 栏目修改</h5>
+<h5 class="sub-header"><a href="/admin/category">栏目管理</a> > 栏目修改</h5>
 
-<form method="post" action="/fladmin/category/doedit" role="form" id="addcat" class="table-responsive">{{ csrf_field() }}
+<form method="post" action="/admin/category/doedit" role="form" id="addcat" class="table-responsive">{{ csrf_field() }}
 <table class="table table-striped table-bordered">
   <tbody>
     <tr>

@@ -20,8 +20,11 @@ class IndexController extends CommonController
     public function index()
     {
         $admin_user_info =  session('admin_user_info');
+
         $leftmenu = new Menu();
+
         $data['menus'] = $leftmenu::getPermissionsMenu($admin_user_info['role_id']);
+//        dd($data['menus']);
         return view('admin.index.index',$data);
     }
 

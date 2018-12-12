@@ -14,8 +14,8 @@ class CategoryController extends CommonController
 
     public function index()
     {
-        $catlist = category_tree(get_category('arctypes',0));
 
+        $catlist = category_tree(get_category('arctypes',0));
         if($catlist)
         {
             foreach($catlist as $k=>$v)

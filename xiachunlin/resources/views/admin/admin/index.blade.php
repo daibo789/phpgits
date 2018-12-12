@@ -13,14 +13,19 @@
 <th>管理</th>
 </tr></thead>
 <tbody>
-<?php foreach($posts as $row){ ?><tr>
-<td>{{$row->id}}</td>
-<td>{{$row->username}}</td>
-<td>{{$row->email}}</td>
-<td>{{$row->status}}</td>
-<td><a href="{{route('admin_admin_edit')}}?id={{$row->id}}">修改</a><?php if($row->id<>1){ ?> | <a onclick="delconfirm('{{route('admin_admin_del')}}?id={{$row->id}}')" href="javascript:;">删除</a><?php } ?></td>
-</tr><?php } ?>
-</tbody></table></div><!-- 表格结束 --></form><!-- 表单结束 -->
+
+<?php foreach($posts as $row){ ?>
+
+    <tr>
+    <td>{{$row->id}}</td>
+    <td>{{$row->username}}</td>
+    <td>{{$row->email}}</td>
+    <td>{{$row->status}}</td>
+    <td><a href="{{route('admin_admin_edit')}}?id={{$row->id}}">修改</a><?php if($row->id<>1){ ?> | <a onclick="delconfirm('{{route('admin_admin_del')}}?id={{$row->id}}')" href="javascript:;">删除</a><?php } ?></td>
+    </tr><?php } ?>
+</tbody>
+</table>
+</div><!-- 表格结束 --></form><!-- 表单结束 -->
 
 <nav aria-label="Page navigation">{{ $posts->links() }}</nav>
 @endsection

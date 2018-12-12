@@ -18,8 +18,8 @@ class ArctypesTableSeeder extends Seeder
                 array (
                     'id' => 1,
                     'pid' => 0,
-                    'addtime' => 1483345707,
-                    'name' => '新闻中心',
+                    'addtime' => time(),
+                    'name' => '',
                     'seotitle' => '',
                     'keywords' => '新闻中心',
                     'description' => '新闻中心',
@@ -37,7 +37,7 @@ class ArctypesTableSeeder extends Seeder
                 array (
                     'id' => 2,
                     'pid' => 0,
-                    'addtime' => 1476063429,
+                    'addtime' => time(),
                     'name' => '案例中心',
                     'seotitle' => '',
                     'keywords' => '案例中心',
@@ -56,7 +56,7 @@ class ArctypesTableSeeder extends Seeder
                 array (
                     'id' => 3,
                     'pid' => 1,
-                    'addtime' => 1476063419,
+                    'addtime' => time(),
                     'name' => '行业新闻',
                     'seotitle' => '',
                     'keywords' => '行业新闻',
@@ -75,7 +75,7 @@ class ArctypesTableSeeder extends Seeder
                 array (
                     'id' => 4,
                     'pid' => 1,
-                    'addtime' => 1476068069,
+                    'addtime' => time(),
                     'name' => '企业新闻',
                     'seotitle' => '',
                     'keywords' => '企业新闻',

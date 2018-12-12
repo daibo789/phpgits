@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('admin.layouts.main')
 @section('title', '栏目添加')
 
 @section('content')

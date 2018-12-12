@@ -1689,6 +1689,45 @@ class MenuTableSeeder extends Seeder
                     'status' => 0,
                     'listorder' => 50,
                 ),
+            129 =>
+                array (
+                    'id' => 130,
+                    'name' => '学校管理',
+                    'pid' => 0,
+                    'action' => 'school_default',
+                    'data' => '',
+                    'type' => 0,
+                    'icon' => 'glyphicon glyphicon-pencil',
+                    'des' => '',
+                    'status' => 1,
+                    'listorder' => 0,
+                ),
+            130 =>
+                array (
+                    'id' => 131,
+                    'name' => '教师管理',
+                    'pid' => 130,
+                    'action' => 'admin_teacher',
+                    'data' => '',
+                    'type' => 0,
+                    'icon' => 'glyphicon glyphicon-pencil',
+                    'des' => '',
+                    'status' => 0,
+                    'listorder' => 0,
+                ),
+            131 =>
+                array (
+                    'id' => 132,
+                    'name' => '学生管理',
+                    'pid' => 130,
+                    'action' => 'admin_stu',
+                    'data' => '',
+                    'type' => 0,
+                    'icon' => 'glyphicon glyphicon-pencil',
+                    'des' => '',
+                    'status' => 0,
+                    'listorder' => 0,
+                ),
         );
         foreach($menu as $value){
             Menu::create($value);

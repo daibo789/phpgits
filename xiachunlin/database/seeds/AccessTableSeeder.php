@@ -1102,6 +1102,24 @@ class AccessTableSeeder extends Seeder
                     'role_id' => 1,
                     'menu_id' => 129,
                 ),
+            181 =>
+                array (
+                    'id' => 182,
+                    'role_id' => 1,
+                    'menu_id' => 131,
+                ),
+            182 =>
+                array (
+                    'id' => 183,
+                    'role_id' => 1,
+                    'menu_id' => 132,
+                ),
+            183 =>
+                array (
+                    'id' => 184,
+                    'role_id' => 1,
+                    'menu_id' => 130,
+                ),
         );
 
         foreach($list as $value){

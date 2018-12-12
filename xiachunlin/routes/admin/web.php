@@ -179,6 +179,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['adm
     Route::post('/weixinmenu/doedit', 'WeixinMenuController@doedit')->name('admin_weixinmenu_doedit');
     Route::get('/weixinmenu/del', 'WeixinMenuController@del')->name('admin_weixinmenu_del');
     Route::get('/weixinmenu/createmenu', 'WeixinMenuController@createmenu')->name('admin_weixinmenu_createmenu'); //生成自定义菜单
+    //教师管理
+    Route::get('/teachermenu', 'WeixinMenuController@index')->name('school_default');
+    Route::get('/teachermenus', 'WeixinMenuController@index')->name('admin_student');
+    Route::get('/teachermenu', 'WeixinMenuController@index')->name('admin_teacher');
     //后台登录注销
     Route::get('/login', 'LoginController@login')->name('admin_login');
     Route::post('/dologin', 'LoginController@dologin')->name('admin_dologin');

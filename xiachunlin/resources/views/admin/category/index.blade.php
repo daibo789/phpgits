@@ -2,7 +2,7 @@
 @section('title', '栏目列表')
 
 @section('content')
-<h2 class="sub-header">网站栏目管理</h2>[ <a href="/fladmin/category/add">增加顶级栏目</a> ] [ <a href="/fladmin/article/add">发布文章</a> ]<br><br>
+<h2 class="sub-header">网站栏目管理</h2>[ <a href="/admin/category/add">增加顶级栏目</a> ] [ <a href="/admin/article/add">发布文章</a> ]<br><br>
 
 <form name="listarc"><div class="table-responsive">
 <table class="table table-striped table-hover">

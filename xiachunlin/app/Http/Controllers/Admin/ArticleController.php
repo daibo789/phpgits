@@ -42,6 +42,7 @@ class ArticleController extends CommonController
         };
         $posts = $this->articleLogic->getPaginate($where, array('id', 'desc'));
         $data['posts'] = $posts;
+
 		return view('admin.article.index', $data);
 		
         //if(!empty($_GET["id"])){$id = $_GET["id"];}else {$id="";}if(preg_match('/[0-9]*/',$id)){}else{exit;}

@@ -37,6 +37,7 @@ class Menu extends BaseModel
 
 
         $menu = object_to_array( $menu,0);
+
         if($menu)
         {
 

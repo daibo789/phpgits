@@ -38,9 +38,10 @@ class LoginController extends Controller
     {
         if(!empty($_POST["username"])){$username = $_POST["username"];}else{$username='';exit;}//用户名
         if(!empty($_POST["pwd"])){$pwd = md5($_POST["pwd"]);}else{$pwd='';exit;}//密码
-
-        $admin_user = DB::table('admins')->where(array('username' => $username, 'pwd' => $pwd))->orWhere(array('email' => $username, 'pwd' => $pwd))->first();
-
+//        dd([$username,$pwd]);
+        $admin_user = DB::table('admins')->where(array('username' => $username, 'pwd' => $pwd))->first();
+//                dd($admin_user);
+        //            ->orWhere(array('email' => $username, 'pwd' => $pwd))
         if($admin_user)
         {
 
