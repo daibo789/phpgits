@@ -17,7 +17,7 @@ function sysconfig($varname='')
     {
         cache()->forget('sysconfig');
 
-        $sysconfig = \App\Model\Sysconfig::orderBy('id')->select('varname', 'value')->get()->toArray();
+        $sysconfig = \App\Model\Admin\Sysconfig::orderBy('id')->select('varname', 'value')->get()->toArray();
 
         cache(['sysconfig' => $sysconfig], \Carbon\Carbon::now()->addMinutes(86400));
     }
@@ -360,7 +360,7 @@ function typeinfo($typeid)
 }
 
 //根据栏目id获取该栏目下文章/商品的数量
-function catarcnum($typeid, $modelname='article')
+function catarcnum($typeid, $modelname='articles')
 {
     $map['typeid']=$typeid;
     return \DB::table($modelname)->where($map)->count('id');
@@ -429,7 +429,6 @@ function success_jump($msg='', $url='', $time=1)
         exit($str);
     }
 }
-
 
 
 
@@ -528,5 +527,10 @@ function arclist(array $param)
 
     if($skip==0){$skip = ($page-1)*$size;}
 
+//    dd($model->skip($skip)->take($size)->get());
     return object_to_array($model->skip($skip)->take($size)->get());
 }
+
+
+
+include_once 'Api/function.php';

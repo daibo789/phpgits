@@ -1,11 +1,11 @@
-@extends('admin.layouts.app')
+@extends('admin.layouts.main')
 @section('title', '商品添加')
 
 @section('content')
 <script language="javascript" type="text/javascript" src="http://<?php echo env('APP_DOMAIN'); ?>/js/My97DatePicker/WdatePicker.js"></script>
-<h5 class="sub-header"><a href="/fladmin/goods">商品列表</a> > 添加商品</h5>
+<h5 class="sub-header"><a href="/admin/goods">商品列表</a> > 添加商品</h5>
 
-<form id="addarc" method="post" action="/fladmin/goods/doadd" role="form" enctype="multipart/form-data" class="table-responsive">{{ csrf_field() }}
+<form id="addarc" method="post" action="/admin/goods/doadd" role="form" enctype="multipart/form-data" class="table-responsive">{{ csrf_field() }}
 <table class="table table-striped table-bordered">
 <tbody>
     <tr>
@@ -126,7 +126,7 @@ function upImage2()
         <td align="right">商品类目：</td>
         <td>
             <select name="typeid" id="typeid">
-                <?php $catlist = category_tree(get_category('goods_type',0));if($catlist){foreach($catlist as $row){
+                <?php $catlist = category_tree(get_category('goods_types',0));if($catlist){foreach($catlist as $row){
                     if($row["id"]==$catid){ ?>
                 <option selected="selected" value="<?php echo $row["id"]; ?>"><?php for($i=0;$i<$row["deep"];$i++){echo "—";}echo $row["name"]; ?></option>
                     <?php }else{ ?>
@@ -160,8 +160,8 @@ function upImage2()
     <tr>
         <td colspan="2">
 <!-- 加载编辑器的容器 --><script id="container" name="body" type="text/plain"></script>
-<!-- 配置文件 --><script type="text/javascript" src="/other/flueditor/ueditor.config.js"></script>
-<!-- 编辑器源码文件 --><script type="text/javascript" src="/other/flueditor/ueditor.all.min.js"></script>
+<!-- 配置文件 --><script type="text/javascript" src="/vendor/flueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 --><script type="text/javascript" src="/vendor/flueditor/ueditor.all.min.js"></script>
 <!-- 实例化编辑器 --><script type="text/javascript">var ue = UE.getEditor('container',{maximumWords:100000,initialFrameHeight:320,enableAutoSave:false});</script></td>
     </tr>
     <tr>

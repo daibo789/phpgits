@@ -22,11 +22,14 @@ class LoginController extends Controller
     public function login()
     {
 
-        if(isset($_SESSION['admin_user_info']))
-        {
-            header("Location: ".route('admin'));
-            exit;
-        }
+//        dd('dasdsada');
+
+//        $admin_user_info =  session('admin_user_info');
+//        if(isset($admin_user_info))
+//        {
+//            header("Location: ".route('admin'));
+//            exit;
+//        }
         return view('admin.login.login');
     }
 
@@ -63,9 +66,13 @@ class LoginController extends Controller
     //退出登录
     public function logout()
     {
-        session_unset();
-        session_destroy();// 退出登录，清除session
-        success_jump('退出成功', route('home'));
+//        $admin_user_info =  session('admin_user_info');
+//        var_dump($admin_user_info);
+        Session()->forget('admin_user_info');
+        Session()->flush();
+        Session::save();
+        // 退出登录，清除session
+        success_jump('退出成功', route('admin_login'));
     }
 
     //密码恢复

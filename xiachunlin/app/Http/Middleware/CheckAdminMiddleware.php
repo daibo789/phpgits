@@ -17,21 +17,21 @@ class CheckAdminMiddleware
     public function handle($request, Closure $next)
     {
 
-//        $this->checkAdminIsLogin();
+        $this->checkAdminIsLogin();
         return $next($request);
     }
 
     function checkAdminIsLogin(){
+        $admin_user_info =  session('admin_user_info');
         //        //判断是否登录
-        if(session('admin_user_info'))
+        if($admin_user_info)
         {
-            $this->user_info = session('admin_user_info');
+            $this->user_info = $admin_user_info;
         }
         else
         {
+            return redirect('admin/login');
 
-            header("Location: ".route('admin_login'));
-            exit;
         }
 
         //判断是否拥有权限
@@ -46,12 +46,12 @@ class CheckAdminMiddleware
             else
             {
                 $menu_id = DB::table('menus')->where('action', \Route::currentRouteName())->value('id');
-//                $check = DB::table('accesses')->where(['role_id' => session('admin_user_info')['role_id'], 'menu_id' => $menu_id])->first();
-//
-//                if(!$check)
-//                {
-//                    error_jump('你没有权限访问，请联系管理员', route('admin'));
-//                }
+                $check = DB::table('accesses')->where(['role_id' => session('admin_user_info')['role_id'], 'menu_id' => $menu_id])->first();
+
+                if(!$check)
+                {
+                    error_jump('你没有权限访问，请联系管理员', route('admin'));
+                }
             }
         }
     }

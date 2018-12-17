@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use DB;
 class GoodsController extends CommonController
 {
     public function __construct()
@@ -35,7 +35,7 @@ class GoodsController extends CommonController
         $posts = parent::pageList('goods', $where);
         foreach($posts as $key=>$value)
         {
-            $info = DB::table('goods_type')->select('name')->where("id", $value->typeid)->first();
+            $info = DB::table('goods_types')->select('name')->where("id", $value->typeid)->first();
             $posts[$key]->name = $info->name;
             $posts[$key]->body = '';
         }
@@ -50,17 +50,28 @@ class GoodsController extends CommonController
         $data = [];
         if(!empty($_GET["catid"])){$data['catid'] = $_GET["catid"];}else{$data['catid'] = 0;}
 
-        $data['goodsbrand_list'] = object_to_array(DB::table('goods_brand')->where('status', 0)->orderBy('listorder', 'asc')->get()); //商品品牌
+        $data['goodsbrand_list'] = object_to_array(DB::table('goods_brands')->where('status', 0)->orderBy('listorder', 'asc')->get()); //商品品牌
 
         return view('admin.goods.add', $data);
     }
 
-    public function doadd()
+    public function doadd(Request $request)
     {
+
+        $admin_user_info =  session('admin_user_info');
+//        dd($admin_user_info);
         $litpic="";if(!empty($_POST["litpic"])){$litpic = $_POST["litpic"];}else{$_POST['litpic']="";} //缩略图
         if(empty($_POST["description"])){if(!empty($_POST["body"])){$_POST['description']=cut_str($_POST["body"]);}} //description
         $_POST['add_time'] = $_POST['pubdate'] = time(); //添加&更新时间
-        $_POST['user_id'] = $_SESSION['admin_user_info']['id']; // 发布者id
+        $_POST['user_id'] = $admin_user_info['id']; // 发布者id
+
+        //规格
+        $spec_names = $_POST['spec_name'];
+        $spec_datas = $_POST['spec_data'];
+        $spec = json_encode(['$spec_names'=>$spec_names,'$spec_datas'=>$spec_datas]);
+        unset($_POST["spec_name"]);
+        unset($_POST["spec_data"]);
+        $_POST['spec'] = $spec;
 
         //关键词
         if(!empty($_POST["keywords"]))
@@ -77,6 +88,7 @@ class GoodsController extends CommonController
                 $_POST['keywords']=get_keywords($title);//标题分词
             }
         }
+
 
         unset($_POST["_token"]);
         if(isset($_POST['editorValue'])){unset($_POST['editorValue']);}
@@ -99,7 +111,7 @@ class GoodsController extends CommonController
                     $tmp[] = ['url'=>$v,'goods_id'=>$goods_id,'add_time'=>time()];
                 }
 
-                DB::table('goods_img')->insert($tmp);
+                DB::table('goods_imgs')->insert($tmp);
             }
 
             success_jump('添加成功', route('admin_goods'));
@@ -112,6 +124,7 @@ class GoodsController extends CommonController
 
     public function edit()
     {
+
         if(!empty($_GET["id"])){$id = $_GET["id"];}else {$id="";}if(preg_match('/[0-9]*/',$id)){}else{exit;}
 
         $data['id'] = $id;
@@ -120,20 +133,21 @@ class GoodsController extends CommonController
         if($goods->promote_end_date != 0){$goods->promote_end_date = date('Y-m-d H:i:s',$goods->promote_end_date);}
 
         $data['post'] = object_to_array($goods, 1);
-        $data['goodsbrand_list'] = object_to_array(DB::table('goods_brand')->where('status', 0)->orderBy('listorder', 'asc')->get()); //商品品牌
-        $data['goods_img_list'] = object_to_array(DB::table('goods_img')->where(array('goods_id'=>$id))->orderBy('listorder', 'asc')->get()); //商品图片
+        $data['goodsbrand_list'] = object_to_array(DB::table('goods_brands')->where('status', 0)->orderBy('listorder', 'asc')->get()); //商品品牌
+        $data['goods_img_list'] = object_to_array(DB::table('goods_imgs')->where(array('goods_id'=>$id))->orderBy('listorder', 'asc')->get()); //商品图片
 
         return view('admin.goods.edit', $data);
     }
 
     public function doedit()
     {
+        $admin_user_info =  session('admin_user_info');
         if(!empty($_POST["id"])){$id = $_POST["id"];}else {$id="";exit;}
 
         $litpic="";if(!empty($_POST["litpic"])){$litpic = $_POST["litpic"];}else{$_POST['litpic']="";} //缩略图
         if(empty($_POST["description"])){if(!empty($_POST["body"])){$_POST['description']=cut_str($_POST["body"]);}}//description
         $_POST['pubdate'] = time();//更新时间
-        $_POST['user_id'] = $_SESSION['admin_user_info']['id']; // 修改者id
+        $_POST['user_id'] = $admin_user_info['id']; // 修改者id
 
         //关键词
         if(!empty($_POST["keywords"]))
@@ -190,6 +204,7 @@ class GoodsController extends CommonController
 
         if(DB::table('goods')->whereIn("id", explode(',', $id))->update(['status' => 1]))
         {
+            DB::table('goods_img')->whereIn("goods_id", explode(',', $id))->delete();
             success_jump("$id ,删除成功");
         }
         else

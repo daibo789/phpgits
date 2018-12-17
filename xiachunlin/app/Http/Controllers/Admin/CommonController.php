@@ -16,7 +16,6 @@ class CommonController
 
     public function __construct()
     {
-
     }
 
     /**

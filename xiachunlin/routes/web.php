@@ -15,5 +15,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//后台
 include_once 'admin/web.php';
+//默认前台
 include_once 'home/web.php';
+//我的商店
+include_once 'shop/web.php';
+//我的wap端
+include_once 'wap/web.php';
+//API
+include_once 'api/web.php';
