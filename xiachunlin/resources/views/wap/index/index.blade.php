@@ -20,7 +20,7 @@
 <ul class="mnewpic2">
     <?php $posts=arclist(array("table"=>"goods","row"=>4,"typeid"=>1,"expression"=>[["litpic","<>","''"]])); ?>
         @foreach($posts as $row)
-            <li><a href="/wap{{get_wap_front_url(array("id"=>$row['id'],"catid"=>$row['typeid'],"type"=>'content'))}}">
+            <li><a href="/wap{{get_wap_front_url(array("id"=>$row['id'],"catid"=>$row['typeid'],"type"=>'goodsdetail'))}}">
                     <img src="<?php echo sysconfig('CMS_BASEHOST'); echo $row['litpic']; ?>" alt="<?php echo $row['title']; ?>">
                 </a>
             </li>

@@ -75,9 +75,13 @@ class ArticleController extends CommonController
     
     public function add()
     {
-		$data = '';
-		if(!empty($_REQUEST["catid"])){$data['catid'] = $_REQUEST["catid"];}else{$data['catid'] = 0;}
-		
+		$data = [];
+		if(!empty($_REQUEST["catid"])){
+		    $data['catid'] = $_REQUEST["catid"];
+		}else{
+		    $data['catid'] = 0;
+		}
+
         return view('admin.article.add', $data);
     }
     

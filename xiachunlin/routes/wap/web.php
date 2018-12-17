@@ -6,16 +6,6 @@
  * Time: 3:04 PM
  */
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 //wap路由，要放到最前面，否则解析不到
 Route::group(['prefix' => 'wap', 'namespace' => 'Wap'], function () {
     Route::get('/', 'IndexController@index')->name('wap_home');

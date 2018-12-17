@@ -34,7 +34,7 @@ function get_wap_front_url(array $param)
     else if($param['type'] == 'goodslist')
     {
         //商品列表页
-        $url .= '/product'.$param['catid'];
+        $url .= '/product'.'/'.$param['catid'];
     }
     else if($param['type'] == 'goodsdetail')
     {

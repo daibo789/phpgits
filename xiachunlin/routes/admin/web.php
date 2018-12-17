@@ -182,7 +182,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['adm
     //教师管理
     Route::get('/teachermenu', 'WeixinMenuController@index')->name('school_default');
     Route::get('/teachermenus', 'WeixinMenuController@index')->name('admin_student');
-    Route::get('/teachermenu', 'WeixinMenuController@index')->name('admin_teacher');
+    Route::get('/teachermenuh', 'WeixinMenuController@index')->name('admin_teacher');
     //后台登录注销
     Route::get('/login', 'LoginController@login')->name('admin_login');
     Route::post('/dologin', 'LoginController@dologin')->name('admin_dologin');

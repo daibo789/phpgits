@@ -3,8 +3,8 @@
 
 
 //前台路由
-Route::group(['prefix' => 'h','namespace' => 'Shop'], function () {
-    Route::get('/', 'IndexController@index')->name('Shop');
+Route::group(['prefix' => 'shop','namespace' => 'Shop'], function () {
+    Route::get('/', 'IndexController@index')->name('shop');
     Route::get('/page404', 'IndexController@page404')->name('shop_page404');         //404页面
     Route::get('/tags', 'IndexController@tags')->name('shop_tags');
     Route::get('/search/{id}', 'IndexController@search')->name('shop_search');  //搜索页面
