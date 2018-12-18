@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->string('user_name')->nullable()->default('')->comment('用户名');
-            $table->string('token')->default(null)->comment('TOKEN');
+            $table->string('token')->nullable()->default('')->comment('TOKEN');
             $table->string('email')->nullable()->default('')->comment('邮箱');
             $table->char('password',32)->nullable()->default('')->comment('密码');
             $table->char('pay_password',32)->nullable()->default('')->comment('支付密码');

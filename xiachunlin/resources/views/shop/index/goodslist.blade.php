@@ -1,6 +1,9 @@
 <!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-<title><?php echo sysconfig('CMS_WEBNAME'); ?></title><meta name="keywords" content="{dede:field.keywords/}" /><meta name="description" content="{dede:field.description function='html2text(@me)'/}" /><link rel="stylesheet" href="<?php echo sysconfig('CMS_BASEHOST'); ?>/css/style.css"></head><body>
-@include('home.common.header')
+<title><?php echo sysconfig('CMS_WEBNAME'); ?></title><meta name="keywords" content="{dede:field.keywords/}" />
+    <meta name="description" content="{dede:field.description function='html2text(@me)'/}" />
+    <link rel="stylesheet" href="/shops/css/style.css">
+</head><body>
+@include('shop.common.header')
 
 <style>
 .cat-menu-h {padding:8px 0;background-color: #fff;}
@@ -14,13 +17,13 @@
 <div class="box">
 <div class="cat-menu-h">
 <ul class="clearfix">
-<li><a<?php if(route('home_goodslist') == url()->full()){echo ' class="hover"';} ?> href="<?php echo route('home_goodslist'); ?>">全部</a></li>
+<li><a<?php if(route('shop_goodslist') == url()->full()){echo ' class="hover"';} ?> href="<?php echo route('shop_goodslist'); ?>">全部</a></li>
 <?php if($goodstype_list){foreach($goodstype_list as $k=>$v){ ?>
-<li><a<?php if(route('home_goodslist',array('typeid'=>$v['id'])) == url()->full()){echo ' class="hover"';} ?> href="<?php echo route('home_goodslist',array('typeid'=>$v['id'])); ?>"><?php echo $v['name']; ?></a></li><?php }} ?>
-<li><a class="forecast" href="<?php echo route('home_goodslist',array('tuijian'=>1)); ?>"> [推荐] </a></li>
+<li><a<?php if(route('shop_goodslist',array('typeid'=>$v['id'])) == url()->full()){echo ' class="hover"';} ?> href="<?php echo route('shop_goodslist',array('typeid'=>$v['id'])); ?>"><?php echo $v['name']; ?></a></li><?php }} ?>
+<li><a class="forecast" href="<?php echo route('shop_goodslist',array('tuijian'=>1)); ?>"> [推荐] </a></li>
 </ul>
 
-<form method="get" class="m-sch fr" name="formsearch" action="<?php echo route('home_goodslist'); ?>"><input class="sch-txt" name="keyword" type="text" value="搜索 按Enter键" onfocus="if(value=='搜索 按Enter键') {value=''}" onblur="if(value=='') {value='搜索 按Enter键'}"></form>
+<form method="get" class="m-sch fr" name="formsearch" action="<?php echo route('shop_goodslist'); ?>"><input class="sch-txt" name="keyword" type="text" value="搜索 按Enter键" onfocus="if(value=='搜索 按Enter键') {value=''}" onblur="if(value=='') {value='搜索 按Enter键'}"></form>
 <div class="cl"></div></div>
 </div>
 
@@ -28,7 +31,7 @@
 <div class="box">
 <ul class="pul" id="goods_list">
 <?php if($list){foreach($list as $k=>$v){ ?>
-<li><a href="<?php echo route('home_goods',array('id'=>$v['id'])); ?>" target="_blank"><img src="<?php echo $v['litpic']; ?>" alt="<?php echo $v['title']; ?>">
+<li><a href="<?php echo route('shop_goods',array('id'=>$v['id'])); ?>" target="_blank"><img src="<?php echo $v['litpic']; ?>" alt="<?php echo $v['title']; ?>">
 <p class="title"><?php echo $v['title']; ?></p>
 <p class="desc"><span class="price-point"><i></i>库存(<?php echo $v['goods_number']; ?>)</span> <?php echo $v['description']; ?></p>
 <div class="item-prices red"><div class="item-link">立即<br>抢购</div><div class="item-info"><div class="price"><i>¥</i><em class="J_actPrice"><span class="yen"><?php echo ceil($v['price']); ?></span></em></div>
@@ -104,5 +107,5 @@ $(function(){
 </script>
 </div><!-- box end -->
 
-@include('home.common.footer')
+@include('shop.common.footer')
 </body></html>

@@ -54,8 +54,8 @@
         <td style="vertical-align:middle;" align="right">图片：</td>
         <td style="vertical-align:middle;"><button type="button" onclick="upImage();">选择图片</button> <input name="pic" type="text" id="pic" value="<?php echo $post->pic; ?>" style="width:40%"> <img style="margin-left:20px;<?php if(empty($post->pic) || !imgmatch($post->pic)){ echo "display:none;"; } ?>" src="<?php if(imgmatch($post->pic)){echo $post->pic;} ?>" width="120" height="80" id="picview"></td>
     </tr>
-<!-- 配置文件 --><script type="text/javascript" src="/other/flueditor/ueditor.config.js"></script>
-<!-- 编辑器源码文件 --><script type="text/javascript" src="/other/flueditor/ueditor.all.js"></script>
+<!-- 配置文件 --><script type="text/javascript" src="/vendor/flueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 --><script type="text/javascript" src="/vendor/flueditor/ueditor.all.js"></script>
 <script type="text/javascript">
 var _editor;
 $(function() {

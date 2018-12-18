@@ -1,8 +1,13 @@
 <!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-<title><?php echo $post->title; ?>_<?php echo sysconfig('CMS_WEBNAME'); ?></title><meta name="keywords" content="{dede:field.keywords/}" /><meta name="description" content="{dede:field.description function='html2text(@me)'/}" /><link rel="stylesheet" href="<?php echo sysconfig('CMS_BASEHOST'); ?>/css/style.css"><script type="text/javascript" src="<?php echo sysconfig('CMS_BASEHOST'); ?>/js/ad.js"></script></head><body>
-@include('home.common.header')
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/layer/layer.js"></script>
+<title><?php echo $post->title; ?>_<?php echo sysconfig('CMS_WEBNAME'); ?>
+</title><meta name="keywords" content="{dede:field.keywords/}" />
+    <meta name="description" content="{dede:field.description function='html2text(@me)'/}" />
+    <link rel="stylesheet" href="/shops/css/style.css">
+    <script type="text/javascript" src="/shops/js/ad.js">
+    </script></head><body>
+@include('shop.common.header')
+<script type="text/javascript" src="/shops/js/jquery.min.js"></script>
+<script type="text/javascript" src="/shops/vender/layer/layer.js"></script>
 <style>
 .detail-main {margin-top:15px;padding: 10px;position: relative;color: #626262;background: #fff;}
 .detail-main .header {height: 28px;line-height: 28px;padding-bottom:8px;border-bottom: 1px dashed #ececec;font-size: 16px;}
@@ -32,13 +37,13 @@
 <div class="detail-main  clearfix">
 <div class="header clearfix">
     <ul class="crumbs">
-        <li><a href="<?php echo route('home'); ?>">首页</a></li>
+        <li><a href="<?php echo route('shop'); ?>">首页</a></li>
         <span class="arrow"><small></small></span>
-        <li><a href="<?php echo route('home_goodslist'); ?>">所有商品</a></li>
+        <li><a href="<?php echo route('shop_goodslist'); ?>">所有商品</a></li>
         <span class="arrow"><small></small></span>
-        <li><a href="<?php echo route('home_goodslist',array('typeid'=>$post->typeid)); ?>"><?php echo $post->type_name; ?></a></li>
+        <li><a href="<?php echo route('shop_goodslist',array('typeid'=>$post->typeid)); ?>"><?php echo $post->type_name; ?></a></li>
     </ul>
-    <a class="bookMark" href="<?php echo route('home_goodslist',array('id'=>$post->id)); ?>">查看更多同类商品<span></span></a>
+    <a class="bookMark" href="<?php echo route('shop_goodslist',array('id'=>$post->id)); ?>">查看更多同类商品<span></span></a>
 </div>
     
 <div class="clearfix">
@@ -53,13 +58,13 @@
         <!-- Add Pagination -->
         <div class="swiper-pagination swiper-pagination-white"></div>
     </div>
-<link rel="stylesheet" href="<?php echo env('APP_URL'); ?>/css/swiper.min.css">
+<link rel="stylesheet" href="/shops/css/swiper.min.css">
 <style>
 .swiper-container{width:360px;height:360px;}
 .swiper-slide{text-align:center;font-size:18px;background:#fff;}
 .swiper-slide img{width:360px;height:360px;}
 </style>
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/swiper.min.js"></script>
+<script type="text/javascript" src="/shops/js/swiper.min.js"></script>
 <script>
 //Swiper轮播
 var swiper = new Swiper('.swiper-container', {
@@ -99,7 +104,7 @@ function submit()
         closeBtn: 0, //不显示关闭按钮
         anim: 2,
         shadeClose: true, //开启遮罩关闭
-        content: '<img src="<?php echo get_erweima(route('weixin_goods_detail',array('id'=>$post->id)),360); ?>">'
+        content: '<img src="<?php echo get_erweima(route('shop_goods',array('id'=>$post->id)),360); ?>">'
     });
 }
 </script>
@@ -153,4 +158,4 @@ function submit()
 <div class="cl"></div>
 </div></div>
 
-@include('home.common.footer')</body></html>
+@include('shop.common.footer')</body></html>

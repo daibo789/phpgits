@@ -20,6 +20,7 @@ if (! function_exists('curl_request'))
                 {
                     $api .= (strpos($api, '?') ? '&' : '?') . http_build_query($params);
                 }
+
                 curl_setopt($curl, CURLOPT_HTTPGET, TRUE);
                 break;
             case 'POST' :
@@ -64,6 +65,24 @@ if (! function_exists('curl_request'))
     }
 }
 
+//获取http(s)://+域名
+function http_host($flag=true)
+{
+    $res = '';
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+    if($flag)
+    {
+        $res = "$protocol$_SERVER[HTTP_HOST]";
+    }
+    else
+    {
+        $res = "$protocol$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; //完整网址
+    }
+
+    return $res;
+}
+
 
 include_once 'Admin/function.php';
 include_once 'Shop/function.php';
+include_once 'Api/function.php';

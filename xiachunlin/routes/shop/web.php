@@ -12,6 +12,7 @@ Route::group(['prefix' => 'shop','namespace' => 'Shop'], function () {
     Route::get('/cat{cat}/{page}', 'IndexController@category');                 //分类页，分页
     Route::get('/cat{cat}', 'IndexController@category')->name('shop_category'); //分类页
     Route::get('/arclist', 'IndexController@arclist')->name('shop_arclist');    //文章列表
+    Route::get('/articleDetail/{id}', 'IndexController@articleDetail')->name('shop_articleDetail');    //详情
     Route::get('/tag{tag}/{page}', 'IndexController@tag');                      //标签页，分页
     Route::get('/tag{tag}', 'IndexController@tag')->name('shop_tag');           //标签页
     Route::get('/page/{id}', 'IndexController@page')->name('shop_singlepage');  //单页

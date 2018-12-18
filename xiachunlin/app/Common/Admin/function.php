@@ -366,6 +366,26 @@ function tagarcnum($tagid)
     return $taglist->count();
 }
 
+//根据文章id获得tag，$id表示文章id，$tagid表示要排除的标签id
+function taglist($id,$tagid=0)
+{
+    $tags="";
+    if($tagid!=0)
+    {
+        $Taglist = \DB::table("taglists")->where('aid',$id)->where('tid', '<>', $tagid)->get();
+    }
+    else
+    {
+        $Taglist = \DB::table("taglists")->where('aid',$id)->get();
+    }
+
+    foreach($Taglist as $row)
+    {
+        if($tags==""){$tags='id='.$row->tid;}else{$tags=$tags.' or id='.$row->tid;}
+    }
+
+    if($tags!=""){return object_to_array(\DB::table("tagindices")->whereRaw(\DB::raw($tags))->get());}
+}
 
 
 /**

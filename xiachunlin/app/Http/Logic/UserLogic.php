@@ -232,12 +232,13 @@ class UserLogic extends BaseLogic
         
         $validator = $this->getValidate($data, 'wx_register');
         if ($validator->fails()){return ReturnData::create(ReturnData::PARAMS_ERROR, null, $validator->errors()->first());}
-        
+
         $res = $this->getModel()->add($data);
         if($res === false){return ReturnData::create(ReturnData::SYSTEM_FAIL);}
-        
         //生成token
         $token = Token::getToken(Token::TYPE_WEIXIN, $res);
+        $data['token'] = $token;
+        $this->getModel()->edit(array('token'=>$token),array('id'=>$res));
         
         return ReturnData::create(ReturnData::SUCCESS,$token, '注册成功');
     }

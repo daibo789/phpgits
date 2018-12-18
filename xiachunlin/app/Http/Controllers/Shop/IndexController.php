@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Shop;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use DB;
 class IndexController extends CommonController
 {
     public function __construct()
@@ -23,8 +23,10 @@ class IndexController extends CommonController
             'limit'  => 6,
             'offset' => 0
         );
-        $url = "/api/goods_list";
+//        dd('dsad');
+        $url = http_host(true)."/api/goods_list";
         $res = curl_request($url,$postdata,'GET');
+//        dd($res);
         $data['tjlist'] = $res['data']['list'];
 
         //商品列表
@@ -37,7 +39,7 @@ class IndexController extends CommonController
             'limit'  => $pagesize,
             'offset' => $offset
         );
-        $url = "/api/goods_list";
+        $url = http_host(true)."/api/goods_list";
         $res = curl_request($url,$postdata,'GET');
         $data['list'] = $res['data']['list'];
 
@@ -107,8 +109,10 @@ class IndexController extends CommonController
         //商品列表
         $postdata['limit'] = $pagesize;
         $postdata['offset'] = $offset;
-        $url = env('APP_API_URL')."/goods_list";
+        $url = http_host(true)."/api/goods_list";
+//        dd($url);
         $res = curl_request($url,$postdata,'GET');
+
         $data['list'] = $res['data']['list'];
 
         $data['totalpage'] = ceil($res['data']['count']/$pagesize);
@@ -121,7 +125,7 @@ class IndexController extends CommonController
             {
                 foreach($res['data']['list'] as $k => $v)
                 {
-                    $html .= '<li><a href="'.route('home_goods',array('id'=>$v['id'])).'" target="_blank"><img src="'.$v['litpic'].'" alt="'.$v['title'].'">';
+                    $html .= '<li><a href="'.route('shop_goods',array('id'=>$v['id'])).'" target="_blank"><img src="'.$v['litpic'].'" alt="'.$v['title'].'">';
                     $html .= '<p class="title">'.$v['title'].'</p>';
                     $html .= '<p class="desc"><span class="price-point"><i></i>库存('.$v['goods_number'].')</span> '.$v['description'].'</p>';
                     $html .= '<div class="item-prices red"><div class="item-link">立即<br>抢购</div><div class="item-info"><div class="price"><i>¥</i><em class="J_actPrice"><span class="yen">'.ceil($v['price']).'</span></em></div>';
@@ -146,11 +150,11 @@ class IndexController extends CommonController
             'limit'  => 15,
             'offset' => 0
         );
-        $url = env('APP_API_URL')."/goodstype_list";
+        $url = http_host(true)."/api/goodstype_list";
         $res = curl_request($url,$postdata,'GET');
         $data['goodstype_list'] = $res['data']['list'];
 
-        return view('home.index.goodslist', $data);
+        return view('shop.index.goodslist', $data);
     }
 
     //商品详情页
@@ -161,11 +165,13 @@ class IndexController extends CommonController
         $where['id'] = $id;
         $where['status'] = 0;
         $data['post'] = logic('Goods')->getOne($where);
-        if(!$data['post']){return redirect()->route('page404');}
-
-        $data['tj_list'] = DB::table('goods')->where(['tuijian'=>1,'status'=>0])->orderBy('id', 'desc')->get();
-
-        return view('home.index.goods', $data);
+//        dd($data['post']);
+        $data['tj_list'] = [];
+        if(!$data['post'])
+        {
+            return redirect()->route('page404');
+        }
+        return view('shop.index.goods', $data);
     }
 
     //商品列表页
@@ -258,7 +264,7 @@ class IndexController extends CommonController
             $postdata = array(
                 'id'  => $request->input('typeid')
             );
-            $url = env('APP_API_URL')."/arctype_detail";
+            $url = http_host(true)."/api/arctype_detail";
             $arctype_detail = curl_request($url,$postdata,'GET');
             $data['post'] = $arctype_detail['data'];
         }
@@ -272,10 +278,10 @@ class IndexController extends CommonController
         );
         if($request->input('typeid', null) != null){$postdata2['typeid'] = $request->input('typeid');}
 
-        $url = env('APP_API_URL')."/article_list";
+        $url = http_host(true)."/api/article_list";
         $res = curl_request($url,$postdata2,'GET');
         $data['list'] = $res['data']['list'];
-
+//        dd($res);
         $data['totalpage'] = ceil($res['data']['count']/$pagesize);
 
         if(isset($_REQUEST['page_ajax']) && $_REQUEST['page_ajax']==1)
@@ -308,15 +314,15 @@ class IndexController extends CommonController
             exit(json_encode($html));
         }
 
-        return view('home.index.arclist', $data);
+        return view('shop.index.arclist', $data);
     }
 
     //文章详情页
-    public function detail($id)
+    public function articleDetail($id)
     {
+//        dd('dsa');
         if(empty($id) || !preg_match('/[0-9]+/',$id)){return redirect()->route('page404');}
-
-        if(cache("detailid$id")){$post = cache("detailid$id");}else{$post = object_to_array(DB::table('article')->where('id', $id)->first(), 1);if(empty($post)){return redirect()->route('page404');}$post['name'] = DB::table('arctype')->where('id', $post['typeid'])->value('name');cache(["detailid$id"=>$post], \Carbon\Carbon::now()->addMinutes(2592000));}
+        if(cache("detailid$id")){$post = cache("detailid$id");}else{$post = object_to_array(DB::table('articles')->where('id', $id)->first(), 1);if(empty($post)){return redirect()->route('page404');}$post['name'] = DB::table('arctypes')->where('id', $post['typeid'])->value('name');cache(["detailid$id"=>$post], \Carbon\Carbon::now()->addMinutes(2592000));}
         if($post)
         {
             $cat = $post['typeid'];
@@ -331,9 +337,9 @@ class IndexController extends CommonController
             return redirect()->route('page404');
         }
 
-        if(cache("catid$cat")){$post=cache("catid$cat");}else{$post = object_to_array(DB::table('arctype')->where('id', $cat)->first(), 1);cache(["catid$cat"=>$post], \Carbon\Carbon::now()->addMinutes(2592000));}
+        if(cache("catid$cat")){$post=cache("catid$cat");}else{$post = object_to_array(DB::table('arctypes')->where('id', $cat)->first(), 1);cache(["catid$cat"=>$post], \Carbon\Carbon::now()->addMinutes(2592000));}
 
-        return view('home.index.'.$post['temparticle'], $data);
+        return view('shop.index.'.$post['temparticle'], $data);
     }
 
     //标签详情页，共有3种显示方式，1正常列表，2列表显示文章，3显示描述
@@ -385,13 +391,13 @@ class IndexController extends CommonController
 
         if($post['template']=='tag2' || $post['template']=='tag3'){if(!empty($pagenow)){return redirect()->route('page404');}}
 
-        return view('home.index.'.$post['template'], $data);
+        return view('shop.index.'.$post['template'], $data);
     }
 
     //标签页
     public function tags()
     {
-        return view('home.index.tags');
+        return view('shop.index.tags');
     }
 
     //搜索页
@@ -407,7 +413,7 @@ class IndexController extends CommonController
         $data['posts']= object_to_array(DB::table("article")->where("title", "like", "%$keyword%")->orderBy('id', 'desc')->take(30)->get());
         $data['keyword']= $keyword;
 
-        return view('home.index.search', $data);
+        return view('shop.index.search', $data);
     }
 
     //单页面
@@ -418,7 +424,7 @@ class IndexController extends CommonController
         if(!empty($id) && preg_match('/[a-z0-9]+/',$id))
         {
             $map['filename']=$id;
-            if(cache("pageid$id")){$post=cache("pageid$id");}else{$post = object_to_array(DB::table('page')->where($map)->first(), 1);cache("pageid$id", $post, 2592000);cache(["pageid$id"=>$post], \Carbon\Carbon::now()->addMinutes(2592000));}
+            if(cache("pageid$id")){$post=cache("pageid$id");}else{$post = object_to_array(DB::table('pages')->where($map)->first(), 1);cache("pageid$id", $post, 2592000);cache(["pageid$id"=>$post], \Carbon\Carbon::now()->addMinutes(2592000));}
 
             if($post)
             {
@@ -435,21 +441,21 @@ class IndexController extends CommonController
             return redirect()->route('page404');
         }
 
-        $data['posts'] = object_to_array(DB::table('page')->orderBy(\DB::raw('rand()'))->take(5)->get());
+        $data['posts'] = object_to_array(DB::table('pages')->orderBy(\DB::raw('rand()'))->take(5)->get());
 
-        return view('home.index.'.$post['template'], $data);
+        return view('shop.index.'.$post['template'], $data);
     }
 
     //sitemap页面
     public function sitemap()
     {
-        return view('home.index.sitemap');
+        return view('shop.index.sitemap');
     }
 
     //404页面
     public function page404()
     {
-        return view('home.404');
+        return view('shop.404');
     }
 
     //验证消息的确来自微信服务器
@@ -475,7 +481,7 @@ class IndexController extends CommonController
 
     //测试页面
     public function test()
-    {return view('home.index.test');
+    {return view('shop.index.test');
         //return base_path('resources/org');
         //$qrcode = new \SimpleSoftwareIO\QrCode\BaconQrCodeGenerator;
         //return $qrcode->size(500)->generate('Make a qrcode without Laravel!');
