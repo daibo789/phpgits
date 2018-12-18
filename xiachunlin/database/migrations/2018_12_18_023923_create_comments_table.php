@@ -14,6 +14,7 @@ class CreateCommentsTable extends Migration
     public function up()
     {
         Schema::create('comments', function (Blueprint $table) {
+            $table->increments('id');
             $table->tinyInteger('comment_type')->nullable()->default(0)->comment('用户评论的类型;0评论的是商品,1评论的是文章');
             $table->integer('id_value')->nullable()->default(0)->comment('文章或者商品的id,文章对应的是article的article_id;商品对应的是goods的goods_id');
             $table->text('content')->comment('评论的内容');

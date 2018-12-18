@@ -83,7 +83,7 @@ class Token
     public static function getToken($type, $uid, $data = array())
     {
         //支持多账号登录
-        if ($token = DB::table('token')->where(array('type' => $type, 'uid' => $uid))->orderBy('id', 'desc')->first())
+        if ($token = DB::table('tokens')->where(array('type' => $type, 'uid' => $uid))->orderBy('id', 'desc')->first())
 		{
             if($data == $token->data && strtotime($token->expired_at)>time())
 			{
@@ -95,7 +95,7 @@ class Token
         $token = md5($type . '-' . $uid . '-' . microtime() . rand(0, 9999));
         $expired_at = date("Y-m-d H:i:s",(time()+3600*24*30)); //token 30天过期
         
-        DB::table('token')->insert(array(
+        DB::table('tokens')->insert(array(
             'token'      => $token,
             'type'       => $type,
             'uid'        => $uid,
