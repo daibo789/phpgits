@@ -21,6 +21,7 @@ Route::group(['prefix' => 'wx', 'namespace' => 'Weixin'], function () {
     Route::any('/wxoauth', 'UserController@oauth')->name('weixin_wxoauth');     //微信网页授权
     Route::any('/login', 'UserController@login')->name('weixin_login');
     Route::any('/register', 'UserController@register')->name('weixin_register');
+    Route::any('/forgetpsw', 'UserController@forgetpsw')->name('weixin_forgetpsw');
     Route::get('/logout', 'UserController@logout')->name('weixin_user_logout'); //退出
     //页面跳转
     Route::get('/jump', 'IndexController@jump')->name('weixin_jump');
@@ -30,7 +31,7 @@ Route::group(['prefix' => 'wx', 'namespace' => 'Weixin'], function () {
 
 
 //微信路由，需登录，全局
-Route::group(['prefix' => 'weixin', 'namespace' => 'Weixin', 'middleware' => ['web','wxlogin']], function () {
+Route::group(['prefix' => 'wx', 'namespace' => 'Weixin', 'middleware' => ['web','wxlogin']], function () {
     //个人中心
     Route::get('/user', 'UserController@index')->name('weixin_user');
     Route::get('/userinfo', 'UserController@userinfo')->name('weixin_userinfo');

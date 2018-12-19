@@ -57,6 +57,9 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'admin.auth' => \App\Http\Middleware\CheckAdminMiddleware::class,
+
+        'token' => \App\Http\Middleware\TokenAuth::class,                       //Token验证，FLi
         'wxlogin' => \App\Http\Middleware\WxLogin::class,                       //微信端登录验证，FLi
+
     ];
 }

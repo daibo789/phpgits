@@ -8,29 +8,38 @@ use App\Common\ReturnCode;
 use App\Common\ReturnData;
 use App\Common\Wechat\WechatAuth;
 use App\Common\Helper;
-
+use App\Common\Wechat\UserManager;
 
 class UserController extends CommonController
 {
-    public function __construct()
+    protected $userManager;
+    public function __construct(UserManager $userManager)
     {
         parent::__construct();
+        $this->userManager = $userManager;
     }
 
     //个人中心
     public function index(Request $request)
     {
-        //$_SESSION['weixin_user_info']['access_token'] = '72d623d26a1a6d61186a97f9ccf752f7';
-
+        $user_info =  session('weixin_user_info');
+        $data['user_info'] = $user_info;
+//         dd($user_info);
         //获取会员信息
         $postdata = array(
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_info";
-        $res = curl_request($url,$postdata,'GET');
-        $data['user_info'] = $res['data'];
 
-        if($res['code'] != ReturnData::SUCCESS){unset($_SESSION['weixin_user_info']);$this->error_jump('请先登录',route('weixin_login'));}
+        $url = http_host(true)."/api/user_info";
+        $res = curl_request($url,$postdata,'GET');
+//        dd($res);
+//        if ($res){
+//            $data['user_info'] = $res['data'];
+//            $this->userManager->saveUserInfo($data['user_info']);
+//        }
+        if(($res['code'] != ReturnData::SUCCESS)||!$res){
+            unset($user);$this->error_jump('请先登录',route('weixin_login'));
+        }
 
         return view('weixin.user.index', $data);
     }
@@ -38,14 +47,15 @@ class UserController extends CommonController
     //个人中心设置
     public function userinfo(Request $request)
     {
+        $user_info =  session('weixin_user_info');
         //获取会员信息
         $postdata = array(
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_info";
+        $url = http_host(true)."/api/user_info";
         $res = curl_request($url,$postdata,'GET');
         $data['user_info'] = $res['data'];
-
+        $data['user_info_token'] = $user_info;
         return view('weixin.user.userinfo', $data);
     }
 
@@ -586,12 +596,7 @@ class UserController extends CommonController
     //登录
     public function login(Request $request)
     {
-        if(isset($_SESSION['weixin_user_info']))
-        {
-            if(isset($_SERVER["HTTP_REFERER"])){header('Location: '.$_SERVER["HTTP_REFERER"]);exit;}
-            header('Location: '.route('weixin_user'));exit;
-        }
-
+        $user = $this->userManager->getUserInfo();
         $return_url = '';
         if(isset($_REQUEST['return_url']) && !empty($_REQUEST['return_url'])){$return_url = $_SESSION['weixin_history_back_url'] = $_REQUEST['return_url'];}
 
@@ -609,22 +614,37 @@ class UserController extends CommonController
 
             $postdata = array(
                 'user_name' => $_POST['user_name'],
-                'password' => md5($_POST['password'])
+                'password' => md5($_POST['password']),
             );
-            $url = env('APP_API_URL')."/wx_login";
+            $url = http_host(true)."/api/wx_login";
             $res = curl_request($url,$postdata,'POST');
+            if(($res['code'] != ReturnData::SUCCESS)||!$res){
+                $this->error_jump('登录失败');
+            }
+//            dd($res);
+            $this->userManager->saveUserInfo($res['data']);
 
-            if($res['code'] != ReturnData::SUCCESS){$this->error_jump('登录失败');}
-
-            $_SESSION['weixin_user_info'] = $res['data'];
-
-            if($return_url != ''){header('Location: '.$return_url);exit;}
+            if($return_url != ''){
+                header('Location: '.$return_url);
+                exit;
+            }
             header('Location: '.route('weixin_user'));exit;
+        }else{
+            if(isset($user))
+            {
+//                if(isset($_SERVER["HTTP_REFERER"])){header('Location: '.$_SERVER["HTTP_REFERER"]);exit;}
+//            header('Location: '.route('weixin_user'));
+//                exit;
+            }
+
         }
 
         return view('weixin.user.login');
     }
 
+    public function forgetpsw (){
+        return view('weixin.user.forgetPsw');
+    }
     //注册
     public function register(Request $request)
     {
@@ -643,9 +663,7 @@ class UserController extends CommonController
 
     public function logout(Request $request)
     {
-        session_unset();
-        session_destroy(); // 退出登录，清除session
-
+        $this->userManager->layout();
         $this->success_jump('退出成功',route('weixin'));
     }
 }

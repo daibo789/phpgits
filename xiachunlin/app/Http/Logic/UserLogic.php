@@ -77,20 +77,38 @@ class UserLogic extends BaseLogic
         
         return $res;
     }
-    
+
+    //基本信息
+    public function getOneforSimple($where = array(), $field = '*')
+    {
+        $res = $this->getModel()->getOne($where, $field);
+        if(!$res){return false;}
+        $res = $this->getDataView($res);
+        return $res;
+    }
+
     //详情
     public function getOne($where = array(), $field = '*')
     {
         $res = $this->getModel()->getOne($where, $field);
         if(!$res){return false;}
-        
         $res = $this->getDataView($res);
-        
-        $res->reciever_address = model('UserAddress')->getOne(['id'=>$res->address_id]);
-        $res->collect_goods_count = model('CollectGoods')->getDb()->where(['user_id'=>$res->id])->count();
-        $res->bonus_count = model('UserBonus')->getDb()->where(array('user_id'=>$res->id,'status'=>0))->count();
-        
+        $res->reciever_address = $this->getOneUserAddress(['id'=>$res->address_id]);
+        $res->collect_goods_count = $this->getOneCollectGoods(['id'=>$res->address_id])->count();
+        $res->bonus_count = $this->getOneUserBonus(array('user_id'=>$res->id,'status'=>0))->count();
         return $res;
+    }
+    //地址
+    public function getOneUserAddress($where = array(), $field = '*'){
+        return model('Admin\\UserAddress')->getOne($where);
+    }
+    //收藏
+    public function getOneCollectGoods($where = array(), $field = '*'){
+        return model('Admin\\CollectGoods')->getDb()->where($where);
+    }
+    //用户优惠券表
+    public function getOneUserBonus($where = array(), $field = '*'){
+        return model('Admin\\UserBonus')->getDb()->where($where);
     }
     
     //添加
@@ -200,8 +218,9 @@ class UserLogic extends BaseLogic
     }
     
     //用户登录
-	public function wxLogin($where)
+	public function wxLogin($where,$type=Token::TYPE_WEIXIN)
     {
+
         if(isset($where['openid']) && !empty($where['openid']))
         {
             $user = $this->getOne(array('openid'=>$where['openid']));
@@ -209,17 +228,20 @@ class UserLogic extends BaseLogic
         elseif(isset($where['user_name']) && !empty($where['user_name']))
         {
             $user = $this->getOne(function ($query) use ($where) {$query->where(['mobile'=>$where['user_name'],'password'=>$where['password']])->orWhere(['user_name'=>$where['user_name'],'password'=>$where['password']]);});
+
         }
-        
-        if(isset($user) && !$user){return ReturnData::create(ReturnData::PARAMS_ERROR, null, '用户不存在或者账号密码错误');}
-        
-        $token = Token::getToken(Token::TYPE_WEIXIN, $user->id);
+//        dd('打算');
+        if(!$user){return ReturnData::create(ReturnData::PARAMS_ERROR, null, '用户不存在或者账号密码错误');}
+
+        $token = Token::getToken(Token::$type, $user->id);
         
         foreach($token as $k=>$v)
         {
             $user->$k = $v;
+            if ($k=='access_token'){
+                $user->token = $v;
+            }
         }
-        
 		return ReturnData::create(ReturnData::SUCCESS, $user, '登录成功');
     }
     
@@ -237,8 +259,9 @@ class UserLogic extends BaseLogic
         if($res === false){return ReturnData::create(ReturnData::SYSTEM_FAIL);}
         //生成token
         $token = Token::getToken(Token::TYPE_WEIXIN, $res);
-        $data['token'] = $token;
-        $this->getModel()->edit(array('token'=>$token),array('id'=>$res));
+//        dd($token);
+        $data['token'] = $token['access_token'];
+        $this->getModel()->edit(array('token'=>$data['token']),array('id'=>$res));
         
         return ReturnData::create(ReturnData::SUCCESS,$token, '注册成功');
     }

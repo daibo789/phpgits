@@ -176,11 +176,11 @@ class IndexController extends CommonController
         if(!empty($id) && preg_match('/[a-z0-9]+/',$id))
         {
             $map['filename']=$id;
-            if(cache("pageid$id")){$post=cache("pageid$id");}else{$post = object_to_array(DB::table('page')->where($map)->first(), 1);cache("pageid$id", $post, 2592000);cache(["pageid$id"=>$post], \Carbon\Carbon::now()->addMinutes(2592000));}
+            if(cache("pageid$id")){$post=cache("pageid$id");}else{$post = object_to_array(DB::table('pages')->where($map)->first(), 1);cache("pageid$id", $post, 2592000);cache(["pageid$id"=>$post], \Carbon\Carbon::now()->addMinutes(2592000));}
 
             if($post)
             {
-                $post['body'] = preg_replace('/src=\"\/uploads\/allimg/',"src=\"".env('APP_URL')."/uploads/allimg",$post['body']);
+                $post['body'] = preg_replace('/src=\"\/uploads\/allimg/',"src=\"".http_host(true)."/uploads/allimg",$post['body']);
                 $post['pubdate'] = date('Y-m-d',$post['pubdate']);
                 $data['post'] = $post;
             }
@@ -195,7 +195,7 @@ class IndexController extends CommonController
             return redirect()->route('page404');
         }
 
-        $data['posts'] = object_to_array(DB::table('page')->orderBy(\DB::raw('rand()'))->take(5)->get());
+        $data['posts'] = object_to_array(DB::table('pages')->orderBy(\DB::raw('rand()'))->take(5)->get());
 
         return view('weixin.index.'.$post['template'], $data);
     }

@@ -29,15 +29,15 @@ class Token
      */
     public static function checkToken($token)
     {
-        $token = DB::table('token')->where(array('token'=>$token))->first();
-		
+        $token = DB::table('tokens')->where(array('token'=>$token))->first();
+
         if ($token)
 		{
             self::$type = $token->type;
             self::$uid  = $token->uid;
             self::$data = $token->data ? json_decode($token->data, true) : array();
         }
-		
+
         return $token ? true : false;
     }
 	
@@ -85,7 +85,9 @@ class Token
         //支持多账号登录
         if ($token = DB::table('tokens')->where(array('type' => $type, 'uid' => $uid))->orderBy('id', 'desc')->first())
 		{
-            if($data == $token->data && strtotime($token->expired_at)>time())
+//            if($data == $token->data && strtotime($token->expired_at)>time())
+
+            if(strtotime($token->expired_at)>time())
 			{
                 return array('access_token'=>$token->token,'expired_at'=>$token->expired_at,'uid'=>$token->uid,'type'=>$token->type);
             }

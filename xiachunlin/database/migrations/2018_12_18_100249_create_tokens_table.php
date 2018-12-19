@@ -15,6 +15,7 @@ class CreateTokensTable extends Migration
     {
 
         Schema::create('tokens', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('token',255)->default('')->comment('token');
             $table->tinyInteger('type')->nullable()->default(0)->comment('0:app, 1:admin, 2:weixin, 3:wap, 4: pc');
             $table->integer('uid')->nullable()->default(0)->comment('uid');

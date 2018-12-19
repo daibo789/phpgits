@@ -17,7 +17,6 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->string('user_name')->nullable()->default('')->comment('用户名');
-            $table->string('token')->nullable()->default('')->comment('TOKEN');
             $table->string('email')->nullable()->default('')->comment('邮箱');
             $table->char('password',32)->nullable()->default('')->comment('密码');
             $table->char('pay_password',32)->nullable()->default('')->comment('支付密码');
@@ -44,7 +43,6 @@ class CreateUsersTable extends Migration
             $table->string('refund_account')->nullable()->default('')->comment('退款账户，支付宝账号');
             $table->string('refund_name')->nullable()->default('')->comment('退款姓名');
             $table->decimal('consumption_money')->nullable()->default(0.00)->comment('累计消费金额');
-            $table->index('token');
             $table->index('mobile');
         });
     }

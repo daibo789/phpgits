@@ -82,7 +82,7 @@ class GoodsController extends CommonController
             'limit'  => $pagesize,
             'offset' => $offset
         );
-        $url = env('APP_API_URL')."/goods_list";
+        $url =  http_host(true)."/api/goods_list";
         $res = curl_request($url,$postdata,'GET');
         $data['list'] = $res['data']['list'];
 
@@ -118,7 +118,7 @@ class GoodsController extends CommonController
             'limit'  => 15,
             'offset' => 0
         );
-        $url = env('APP_API_URL')."/goodstype_list";
+        $url = http_host(true)."/api/goodstype_list";
         $res = curl_request($url,$postdata,'GET');
         $data['goodstype_list'] = $res['data']['list'];
 

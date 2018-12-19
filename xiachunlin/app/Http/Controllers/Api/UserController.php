@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use function GuzzleHttp\Promise\all;
 use Log;
 use DB;
 use Illuminate\Http\Request;
@@ -123,15 +124,20 @@ class UserController extends CommonController
     //用户信息
     public function userInfo(Request $request)
     {
-        $where['id'] = Token::$uid;
 
+
+        $where['id'] = Token::$uid;
         $res = $this->getLogic()->getOne($where);
         if(!$res)
         {
             return ReturnData::create(ReturnData::RECORD_NOT_EXIST);
         }
 
-        if($res->pay_password){$res->pay_password = 1;}else{$res->pay_password = 0;}
+        if($res->pay_password){
+            $res->pay_password = 1;
+        }
+        else{$res->pay_password = 0;
+        }
         unset($res->password);
 
         return ReturnData::create(ReturnData::SUCCESS,$res);
@@ -178,8 +184,7 @@ class UserController extends CommonController
         {
             return ReturnData::create(ReturnData::PARAMS_ERROR);
         }
-
-        return $this->getLogic()->wxLogin($data);
+        return $this->getLogic()->wxLogin($data,Token::TYPE_WEIXIN);
     }
 
     //注册
@@ -214,8 +219,9 @@ class UserController extends CommonController
             //判断手机格式
             if(!Helper::isValidMobile($data['mobile'])){return ReturnData::create(ReturnData::MOBILE_FORMAT_FAIL);}
 
+            $user = model('Admin\\User')->getOne(array('mobile'=>$data['mobile']));
             //判断是否已经注册
-            if (model('Admin\\User')->getOne(array('mobile'=>$data['mobile'])))
+            if ($user)
             {
                 return ReturnData::create(ReturnData::MOBILE_EXIST);
             }
@@ -225,7 +231,7 @@ class UserController extends CommonController
         {
             if (model('Admin\\User')->getOne(array('user_name'=>$data['user_name'])))
             {
-                return ReturnData::create(ReturnData::PARAMS_ERROR,null,'用户名已存在');
+                return ReturnData::create(ReturnData::PARAMS_ERROR,null,'昵称已存在');
             }
         }
 

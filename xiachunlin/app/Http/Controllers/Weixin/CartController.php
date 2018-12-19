@@ -6,22 +6,27 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Common\ReturnData;
 use App\Common\ReturnCode;
+use App\Common\Wechat\UserManager;
 
 
 class CartController extends CommonController
 {
-    public function __construct()
+    protected $userManager;
+    public function __construct(UserManager $userManager)
     {
         parent::__construct();
+        $this->userManager = $userManager;
     }
 
     //商品列表
     public function index(Request $request)
     {
-        dd('dd');
+//        dd('dd');
+        $weixin_user_info = $this->userManager->getUserInfo();
+        $data['weixin_user_info'] = $weixin_user_info;
         //购物车列表
         $postdata = array(
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $weixin_user_info['access_token']
         );
         $url = http_host(true)."/api/cart_list";
         $res = curl_request($url,$postdata,'GET');

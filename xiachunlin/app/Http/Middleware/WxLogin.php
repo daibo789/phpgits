@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-
+use App\Common\Wechat\UserManager;
 class WxLogin
 {
     /**
@@ -11,9 +11,11 @@ class WxLogin
      */
     public function handle($request, Closure $next)
     {
-        if(isset($_SESSION['weixin_user_info']))
-        {
 
+        $user =  session('weixin_user_info');
+//        dd($user);
+        if(isset($user))
+        {
         }
         else
         {

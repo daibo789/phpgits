@@ -1,13 +1,13 @@
 <!DOCTYPE html><html><head><meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 <title>购物车</title><meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
-<link href="<?php echo env('APP_URL'); ?>/css/weixin/style.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/weixin/mobile.js"></script>
+<link href="/weixins/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="/weixins/js/jquery.min.js"></script>
+<script type="text/javascript" src="/weixins/js/mobile.js"></script>
 <meta name="keywords" content="关键词"><meta name="description" content="描述"></head><body>
 <div class="classreturn loginsignup">
-    <div class="ds-in-bl return"><a href="javascript:history.back(-1);"><img src="<?php echo env('APP_URL'); ?>/images/weixin/return.png" alt="返回"></a></div>
+    <div class="ds-in-bl return"><a href="javascript:history.back(-1);"><img src="/weixins/images/return.png" alt="返回"></a></div>
     <div class="ds-in-bl tit center"><span>购物车</span></div>
-    <div class="ds-in-bl nav_menu"><a href="javascript:void(0);"><img src="<?php echo env('APP_URL'); ?>/images/weixin/class1.png" alt="菜单"></a></div>
+    <div class="ds-in-bl nav_menu"><a href="javascript:void(0);"><img src="/weixins/images/class1.png" alt="菜单"></a></div>
 </div>
 
 @include('weixin.common.headerNav')
@@ -80,7 +80,7 @@
 <!--购物车没有商品-start-->
 <div class="cart_list">
     <div class="nonenothing">
-        <img src="<?php echo env('APP_URL'); ?>/images/weixin/nothing.png">
+        <img src="/weixins/images/nothing.png">
         <p>购物车暂无商品</p>
         <a href="<?php echo route('weixin'); ?>">去逛逛</a>
     </div><br><br>
@@ -105,7 +105,7 @@
 @include('weixin.common.footer')
 <?php } ?>
 
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/layer/mobile/layer.js"></script>
+<script type="text/javascript" src="/weixins/vender/layer/mobile/layer.js"></script>
 <script>
 function cart_submit()
 {
@@ -143,8 +143,8 @@ function change_goods_number(type, id)
     if(!/^[0-9]*$/.test(goods_number)){goods_number = document.getElementById('goods_number'+id).value;}
     document.getElementById('goods_number'+id).value = goods_number;
     
-    var access_token = '<?php echo $_SESSION['weixin_user_info']['access_token']; ?>';
-	var url = '<?php echo env('APP_API_URL').'/cart_add'; ?>';
+    var access_token = '<?php echo $weixin_user_info['access_token']; ?>';
+	var url = '<?php echo http_host(true).'/api/cart_add'; ?>';
     
     $.post(url,{access_token:access_token,goods_id:id,goods_number:goods_number},function(res)
 	{
@@ -171,7 +171,7 @@ function change_goods_number(type, id)
 $(function () {
     //删除购物车商品事件
     $(document).on("click", '.deleteGoods', function (e) {
-        var access_token = '<?php echo $_SESSION['weixin_user_info']['access_token']; ?>';
+        var access_token = '<?php echo $weixin_user_info['access_token']; ?>';
         var cart_ids = new Array();
         cart_ids.push($(this).attr('data-cart-id'));
         layer.open({
@@ -181,7 +181,7 @@ $(function () {
                 layer.close(index);
                 $.ajax({
                     type : "POST",
-                    url:"<?php echo env('APP_API_URL').'/cart_delete'; ?>",
+                    url:"<?php echo http_host(true).'/api/cart_delete'; ?>",
                     dataType:'json',
                     data: {access_token:access_token,id:cart_ids},
                     success: function(res){

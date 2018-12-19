@@ -1,12 +1,12 @@
 <!DOCTYPE html><html><head><meta http-equiv="content-type" content="text/html;charset=utf-8"/>
-<title>登录</title><meta name="keywords" content="关键词"><meta name="description" content="描述"><meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+<title>忘记密码(未完待续)</title><meta name="keywords" content="关键词"><meta name="description" content="描述"><meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
 <link href="/weixins/css/style.css" type="text/css" rel="stylesheet">
 <script type="text/javascript" src="/weixins/js/jquery.min.js"></script>
 <script type="text/javascript" src="/weixins/js/mobile.js"></script>
 <link href="/weixins/css/font-awesome.min.css" type="text/css" rel="stylesheet"></head><body>
 <div class="classreturn loginsignup">
     <div class="ds-in-bl return"><a href="javascript:history.back(-1);"><img src="/weixins/images/return.png" alt="返回"></a></div>
-    <div class="ds-in-bl tit center"><span>登录</span></div>
+    <div class="ds-in-bl tit center"><span>忘记密码(未完待续)</span></div>
     <div class="ds-in-bl nav_menu"><a href="javascript:void(0);"><img src="/weixins/images/class1.png" alt="菜单"></a></div>
 </div>
 
@@ -39,7 +39,7 @@
     <a style="margin:10px;background-color:#1aad19;text-align:center;color:white;border:1px solid #179e16;" class="bottoma" href="javascript:submit();">登录</a>
 </div>
 <div class="box reg">
-<?php if($isWechatBrowser){ ?><a style="float:left;" href="<?php echo route('weixin_wxoauth'); ?>">微信登录</a> <?php } ?><span style="float:right;"><a href="<?php echo route('weixin_register'); ?>">快速注册</a> | <a href="{{route('weixin_forgetpsw')}}">忘记密码？</a></span>
+<?php if($isWechatBrowser){ ?><a style="float:left;" href="<?php echo route('weixin_wxoauth'); ?>">微信登录</a> <?php } ?><span style="float:right;"><a href="<?php echo route('weixin_register'); ?>">快速注册</a> | <a href="">忘记密码？</a></span>
 </div><br><br>
 <script type="text/javascript" src="/weixins/js/md5.min.js"></script>
 <script type="text/javascript" src="/weixins/vender/layer/mobile/layer.js"></script>
@@ -74,32 +74,25 @@ function submit()
     }
     
     $("#login").submit();
+    /* $.post('<?php echo env('APP_API_URL').'/wx_login'; ?>',{user_name:user_name,password:md5(password)},function(res)
+	{
+		if(res.code==0)
+		{
+            //提示
+            layer.open({
+                content: '登录成功'
+                ,skin: 'msg'
+                ,time: 2 //2秒后自动关闭
+            });
+            
+            location.href = '<?php if(isset($_SERVER["HTTP_REFERER"])){echo $_SERVER["HTTP_REFERER"];}else{echo route('weixin_user');} ?>';
+		}
+		else
+		{
+            
+		}
+	},'json'); */
 }
 </script>
 @include('weixin.common.footer')
 </body></html>
-
-
-<!--
-$.post('<?php echo http_host(true).'/api/wx_login'; ?>',{user_name:user_name,password:md5(password)},function(res)
-{
-if(res.code==0)
-{
-//提示
-layer.open({
-content: '登录成功'
-,skin: 'msg'
-,time: 2 //2秒后自动关闭
-});
-location.href = '<?php if(isset($_SERVER["HTTP_REFERER"])){echo $_SERVER["HTTP_REFERER"];}else{echo route('weixin_user');} ?>';
-}
-else
-{
-layer.open({
-content: '登录失败'
-,skin: 'msg'
-,time: 2 //2秒后自动关闭
-});
-}
-},'json');
--->
