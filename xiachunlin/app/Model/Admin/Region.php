@@ -1,21 +1,19 @@
 <?php
 
 namespace App\Model\Admin;
+
+use Illuminate\Database\Eloquent\Model;
 use App\Http\Model\BaseModel;
 use DB;
 use Log;
-
-
-class UserAddress extends BaseModel
+class Region extends BaseModel
 {
-//用户收货地址
+    //地区
 
-    protected $table = 'user_addresses';
+    protected $table = 'region';
     public $timestamps = false;
     protected $hidden = array();
     protected $guarded = array(); //$guarded包含你不想被赋值的字段数组。
-
-    const IS_DEFAULT = 1; //是默认地址
 
     public function getDb()
     {
@@ -167,11 +165,11 @@ class UserAddress extends BaseModel
         return $res;
     }
 
-    /**
-     * 打印sql
-     */
-    public function toSql($where)
+    //根据id获取地区中文名称
+    public function getRegionName($where)
     {
-        return $this->getDb()->where($where)->toSql();
+        if(empty($where)){return '';}
+
+        return $this->getDb()->where($where)->value('name');
     }
 }

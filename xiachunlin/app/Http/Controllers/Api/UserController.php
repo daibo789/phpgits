@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Common\ReturnData;
 use App\Common\Helper;
 use App\Common\Token;
-use App\Http\Model\User;
+use App\Model\Admin\User;
 use App\Http\Logic\UserLogic;
 
 class UserController extends CommonController
@@ -77,6 +77,7 @@ class UserController extends CommonController
     //修改
     public function userUpdate(Request $request)
     {
+
         if(Helper::isPostRequest())
         {
             $where['id'] = Token::$uid;
@@ -84,12 +85,15 @@ class UserController extends CommonController
             //判断用户名是否已经存在
             if($request->input('user_name', null)!==null)
             {
-                if(model('User')->getOne([['user_name', '=', $request->input('user_name')],['id', '<>', Token::$uid]]))
+                $user = model('Admin\\User')->getOne([['user_name', '=', $request->input('user_name')],['id', '=', Token::$uid]]);
+                if($user)
                 {
                     return ReturnData::create(ReturnData::PARAMS_ERROR,null,'用户名已存在');
                 }
+
             }
             $data = [];
+            if($request->input('user_name', null)!==null){$data['user_name'] = $request->input('user_name');}
             if($request->input('email', null)!==null){$data['email'] = $request->input('email');}
             if($request->input('sex', null)!==null){$data['sex'] = $request->input('sex');}
             if($request->input('birthday', null)!==null){$data['birthday'] = $request->input('birthday');}

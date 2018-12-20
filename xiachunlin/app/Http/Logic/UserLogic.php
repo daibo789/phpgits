@@ -8,6 +8,7 @@ use App\Model\Admin\User;
 use App\Http\Requests\UserRequest;
 use Validator;
 use App\Http\Model\UserMoney;
+use Carbon\Carbon;
 
 class UserLogic extends BaseLogic
 {
@@ -90,6 +91,7 @@ class UserLogic extends BaseLogic
     //详情
     public function getOne($where = array(), $field = '*')
     {
+
         $res = $this->getModel()->getOne($where, $field);
         if(!$res){return false;}
         $res = $this->getDataView($res);
@@ -130,13 +132,17 @@ class UserLogic extends BaseLogic
     public function edit($data, $where = array())
     {
         if(empty($data)){return ReturnData::create(ReturnData::SUCCESS);}
-        
         $validator = $this->getValidate($data, 'edit');
         if ($validator->fails()){return ReturnData::create(ReturnData::PARAMS_ERROR, null, $validator->errors()->first());}
-        
-        $data['updated_at'] =time();
+        $data['updated_at'] = Carbon::now();
         $res = $this->getModel()->edit($data,$where);
-        if($res){return ReturnData::create(ReturnData::SUCCESS,$res);}
+        if($res){
+            //执行成功可以删除旧的图
+            if ($data['head_img']){//添加图片成功  删除旧图 暂时不处理
+
+            }
+            return ReturnData::create(ReturnData::SUCCESS,$res);
+        }
         
         return ReturnData::create(ReturnData::FAIL);
     }
@@ -227,10 +233,12 @@ class UserLogic extends BaseLogic
         }
         elseif(isset($where['user_name']) && !empty($where['user_name']))
         {
-            $user = $this->getOne(function ($query) use ($where) {$query->where(['mobile'=>$where['user_name'],'password'=>$where['password']])->orWhere(['user_name'=>$where['user_name'],'password'=>$where['password']]);});
-
+            $user = $this->getOne(array('mobile'=>$where['user_name'],'password'=>$where['password']));
+//            $user = $this->getOne(function ($query) use ($where) {
+//                $query->where(['mobile'=>$where['user_name'],'password'=>$where['password']])
+//                    ->orWhere(['user_name'=>$where['user_name'],'password'=>$where['password']]);
+//            });
         }
-//        dd('打算');
         if(!$user){return ReturnData::create(ReturnData::PARAMS_ERROR, null, '用户不存在或者账号密码错误');}
 
         $token = Token::getToken(Token::$type, $user->id);

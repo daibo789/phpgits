@@ -1,19 +1,20 @@
 <!DOCTYPE html><html><head><meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 <title>我的订单</title><meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
-<link href="<?php echo env('APP_URL'); ?>/css/weixin/style.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/jquery.min.js"></script><script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/weixin/mobile.js"></script>
+<link href="/weixins/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="/weixins/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/weixins/js/mobile.js"></script>
 <meta name="keywords" content="关键词"><meta name="description" content="描述"></head><body style="background-color:#f1f1f1;">
 <div class="classreturn loginsignup">
-    <div class="ds-in-bl return"><a href="javascript:history.back(-1);"><img src="<?php echo env('APP_URL'); ?>/images/weixin/return.png" alt="返回"></a></div>
+    <div class="ds-in-bl return"><a href="javascript:history.back(-1);"><img src="/weixins/images/return.png" alt="返回"></a></div>
     <div class="ds-in-bl tit center"><span>我的订单</span></div>
-    <div class="ds-in-bl nav_menu"><a href="javascript:void(0);"><img src="<?php echo env('APP_URL'); ?>/images/weixin/class1.png" alt="菜单"></a></div>
+    <div class="ds-in-bl nav_menu"><a href="javascript:void(0);"><img src="/weixins/images/class1.png" alt="菜单"></a></div>
 </div>
 
 @include('weixin.common.headerNav')
 
 <!--导航左右滑动-start-->
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/swiper.min.js"></script>
-<link rel="stylesheet" href="<?php echo env('APP_URL'); ?>/css/swiper.min.css">
+<script type="text/javascript" src="/weixins/js/swiper.min.js"></script>
+<link rel="stylesheet" href="/weixins/css/swiper.min.css">
 <div class="swiper-nav">
     <div class="swiper-wrapper">
         <div class="swiper-slide<?php $order_status=0;if(isset($_REQUEST['status']) && !empty($_REQUEST['status'])){$order_status=$_REQUEST['status'];}if($order_status==0){echo ' swiper-slide-activate';} ?>"><a href="<?php echo route('weixin_order_list'); ?>">全部</a></div>
@@ -73,9 +74,9 @@ var swiper = new Swiper('.swiper-nav', {
 .tag a.activate{color:#ea6f5a;border:1px solid #ea6f5a;}
 </style>
 
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/layer/mobile/layer.js"></script>
+<script type="text/javascript" src="/weixins/vender/layer/mobile/layer.js"></script>
 <script>
-var access_token = '<?php echo $_SESSION['weixin_user_info']['access_token']; ?>';
+var access_token = '<?php echo $weixin_user_info['access_token']; ?>';
 
 //取消订单
 function cancel_order(order_id)
@@ -85,7 +86,7 @@ function cancel_order(order_id)
         content: '确定要取消该订单吗？'
         ,btn: ['确定', '取消']
         ,yes: function(){
-            var url = '<?php echo env('APP_API_URL')."/order_user_cancel"; ?>';
+            var url = '<?php echo http_host(true)."/api/order_user_cancel"; ?>';
             $.post(url,{access_token:access_token,id:order_id},function(res)
             {
                 //提示
@@ -116,7 +117,7 @@ function done_order(order_id)
         content: '确定要这样操作吗？'
         ,btn: ['确定', '取消']
         ,yes: function(){
-            var url = '<?php echo env('APP_API_URL')."/order_user_receipt_confirm"; ?>';
+            var url = '<?php echo  http_host(true)."/api/order_user_receipt_confirm"; ?>';
             $.post(url,{access_token:access_token,id:order_id},function(res)
             {
                 //提示
@@ -147,7 +148,7 @@ function del_order(order_id)
         content: '确定要删除该订单吗？'
         ,btn: ['确定', '取消']
         ,yes: function(){
-            var url = '<?php echo env('APP_API_URL')."/order_user_delete"; ?>';
+            var url = '<?php echo  http_host(true)."/api/order_user_delete"; ?>';
             $.post(url,{access_token:access_token,id:order_id},function(res)
             {
                 //提示
@@ -178,7 +179,7 @@ function refund_order(order_id)
         content: '确定要申请退款吗？'
         ,btn: ['确定', '取消']
         ,yes: function(){
-            var url = '<?php echo env('APP_API_URL')."/order_user_refund"; ?>';
+            var url = '<?php echo  http_host(true)."/api/order_user_refund"; ?>';
             $.post(url,{access_token:access_token,id:order_id},function(res)
             {
                 //提示

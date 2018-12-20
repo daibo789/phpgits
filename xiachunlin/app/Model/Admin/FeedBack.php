@@ -1,21 +1,18 @@
 <?php
 
 namespace App\Model\Admin;
+
 use App\Http\Model\BaseModel;
 use DB;
 use Log;
-
-
-class UserAddress extends BaseModel
+class FeedBack extends BaseModel
 {
-//用户收货地址
+    //用户余额明细
 
-    protected $table = 'user_addresses';
+    protected $table = 'feed_backs';
     public $timestamps = false;
     protected $hidden = array();
     protected $guarded = array(); //$guarded包含你不想被赋值的字段数组。
-
-    const IS_DEFAULT = 1; //是默认地址
 
     public function getDb()
     {
@@ -166,12 +163,65 @@ class UserAddress extends BaseModel
 
         return $res;
     }
-
-    /**
-     * 打印sql
-     */
-    public function toSql($where)
+    /*
+    //获取列表
+	public static function getList(array $param)
     {
-        return $this->getDb()->where($where)->toSql();
+        extract($param); //参数：limit，offset
+
+        $limit  = isset($limit) ? $limit : 10;
+        $offset = isset($offset) ? $offset : 0;
+
+        $model = new FeedBack;
+
+        $res['count'] = $model->count();
+        $res['list'] = array();
+
+		if($res['count']>0)
+        {
+            $res['list']  = $model->select('title','created_at')->skip($offset)->take($limit)->orderBy('id','desc')->get()->toArray();
+        }
+        else
+        {
+            return false;
+        }
+
+        return $res;
     }
+
+    public static function getOne($id)
+    {
+        return self::where('id', $id)->first()->toArray();
+    }
+
+    public static function add(array $data)
+    {
+        if ($id = self::insertGetId($data))
+        {
+            return $id;
+        }
+
+        return false;
+    }
+
+    public static function modify($where, array $data)
+    {
+        if (self::where($where)->update($data))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    //删除一条记录
+    public static function remove($id)
+    {
+        if (!self::whereIn('id', explode(',', $id))->delete())
+        {
+            return false;
+        }
+
+        return true;
+    } */
 }

@@ -17,7 +17,7 @@
     <a href="javascript:update_avator();"><li>
         <div class="ui-list-thumb">
             <!-- <span style="background-image:url("/images/weixin/no_user.jpg)"></span> -->
-            <form id="head_img" action="<?php echo http_host(true).'/image_upload'; ?>" method="post" enctype="multipart/form-data">
+            <form id="head_img" action="<?php echo http_host(true).'/api/image_upload'; ?>" method="post" enctype="multipart/form-data">
                 <img id="avator" src="<?php if($user_info['head_img']!=''){echo $user_info['head_img'];}else{echo '/weixins/images/no_user.jpg';} ?>">
                 <input id="fileupload" type="file" name="file" style="display:none;">
                 <input type="hidden" name="access_token" value="<?php echo $user_info_token['access_token']; ?>">
@@ -40,6 +40,8 @@ function update_avator()
 
 $(function(){
     $("#fileupload").change(function(){
+        // alert('das');
+        // return;
 		$("#head_img").ajaxSubmit({
 			dataType: 'json',
 			success: function(res) {
@@ -48,7 +50,7 @@ $(function(){
                 {
 					$("#avator").attr("src",img);
                     
-                    $.post('<?php echo http_host(true).'api/user_info_update'; ?>',{access_token:'<?php echo $user_info_token['access_token']; ?>',head_img:img},function(res2)
+                    $.post('<?php echo http_host(true).'/api/user_info_update'; ?>',{access_token:'<?php echo $user_info_token['access_token']; ?>',head_img:img},function(res2)
                     {
                         if(res2.code==0)
                         {
@@ -63,7 +65,13 @@ $(function(){
 				}
 			},
 			error:function(res){
-				//files.html(res.responseText);
+
+                layer.open({
+                    content: JSON.stringify(res)
+                    ,skin: 'msg'
+                    ,time: 2 //2秒后自动关闭
+                });
+				// files.html(res.responseText);
 			}
 		});
 	});
@@ -105,7 +113,7 @@ function update_username()
             }
             else
             {
-                $.post('<?php echo http_host(true).'api/user_info_update'; ?>',{user_name:user_name,access_token:'<?php echo $user_info_token['access_token']; ?>'},function(res)
+                $.post('<?php echo http_host(true).'/api/user_info_update'; ?>',{user_name:user_name,access_token:'<?php echo $user_info_token['access_token']; ?>'},function(res)
                 {
                     if(res.code==0)
                     {
