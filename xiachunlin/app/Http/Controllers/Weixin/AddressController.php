@@ -20,6 +20,7 @@ class AddressController extends CommonController
     //收货地址列表
     public function index(Request $request)
     {
+//        dd('dsa');
         $weixin_user_info = $this->userManager->getUserInfo();
         $data['weixin_user_info'] = $weixin_user_info;
         $pagesize = 10;
@@ -43,6 +44,7 @@ class AddressController extends CommonController
 
             if($res['data']['list'])
             {
+
                 foreach($res['data']['list'] as $k => $v)
                 {
                     $html .= '<div class="flow-have-adr">';
@@ -79,15 +81,17 @@ class AddressController extends CommonController
     //收货地址修改
     public function userAddressUpdate(Request $request)
     {
+        $weixin_user_info = $this->userManager->getUserInfo();
+        $data['weixin_user_info'] = $weixin_user_info;
         $id = $request->input('id','');
 
         if($id == ''){$this->error_jump(ReturnCode::NO_FOUND,route('weixin'),3);}
 
         $postdata = array(
             'id'  => $_REQUEST['id'],
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $weixin_user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_address_detail";
+        $url = http_host(true)."/api/user_address_detail";
         $res = curl_request($url,$postdata,'GET');
         $data['post'] = $res['data'];
 

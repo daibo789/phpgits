@@ -5,16 +5,26 @@ namespace App\Model\Admin;
 use App\Http\Model\BaseModel;
 use DB;
 use Log;
-
-
-class CollectGoods extends BaseModel
+class Cart extends BaseModel
 {
-    //商品收藏
+    //购物车模型
 
-    protected $table = 'collect_goods';
+    /**
+     * 关联到模型的数据表
+     *
+     * @var string
+     */
+    protected $table = 'carts';
     public $timestamps = false;
     protected $hidden = array();
     protected $guarded = array(); //$guarded包含你不想被赋值的字段数组。
+
+    //购物车商品类型
+    const CART_GENERAL_GOODS        = 0; // 普通商品
+    const CART_GROUP_BUY_GOODS      = 1; // 团购商品
+    const CART_AUCTION_GOODS        = 2; // 拍卖商品
+    const CART_SNATCH_GOODS         = 3; // 夺宝奇兵
+    const CART_EXCHANGE_GOODS       = 4; // 积分商城
 
     public function getDb()
     {
@@ -164,5 +174,25 @@ class CollectGoods extends BaseModel
         $res = $res->where($where)->delete();
 
         return $res;
+    }
+
+    /**
+     * 用户购物车商品总数量
+     *
+     * @access  public
+     * @param   int $user_id 用户ID
+     * @return  int
+     */
+    public function TotalGoodsCount($where)
+    {
+        return $this->getDb()->where($where)->sum('goods_number');
+    }
+
+    /**
+     * 打印sql
+     */
+    public function toSql($where)
+    {
+        return $this->getDb()->where($where)->toSql();
     }
 }

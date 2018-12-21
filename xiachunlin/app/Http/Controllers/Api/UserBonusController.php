@@ -5,15 +5,13 @@ namespace App\Http\Controllers\Api;
 use Log;
 use DB;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Model\Admin\UserAddress;
-use App\Http\Logic\UserAddressLogic;
 use App\Common\ReturnData;
 use App\Common\Helper;
 use App\Common\Token;
+use App\Model\Admin\UserBonus;
+use UserBonusLogic;
 
-
-class UserAddressController extends CommonController
+class UserBonusController extends CommonController
 {
     public function __construct()
     {
@@ -22,15 +20,15 @@ class UserAddressController extends CommonController
 
     public function getLogic()
     {
-        return logic('UserAddress');
+        return logic('UserBonus');
     }
 
-    public function userAddressList(Request $request)
+    public function userBonusList(Request $request)
     {
-
         //参数
         $limit = $request->input('limit', 10);
         $offset = $request->input('offset', 0);
+        if($request->input('status', null) != null){$where['status'] = $request->input('status');}
 
         $where['user_id'] = Token::$uid;
 
@@ -39,10 +37,12 @@ class UserAddressController extends CommonController
         return ReturnData::create(ReturnData::SUCCESS,$res);
     }
 
-    public function userAddressDetail(Request $request)
+    public function userBonusDetail(Request $request)
     {
         //参数
-        if($request->input('id',null) != null){$where['id'] = $request->input('id');}
+        if(!checkIsNumber($request->input('id',null))){return ReturnData::create(ReturnData::PARAMS_ERROR);}
+        $id = $request->input('id');
+        $where['id'] = $id;
         $where['user_id'] = Token::$uid;
 
         $res = $this->getLogic()->getOne($where);
@@ -55,7 +55,7 @@ class UserAddressController extends CommonController
     }
 
     //添加
-    public function userAddressAdd(Request $request)
+    public function userBonusAdd(Request $request)
     {
         if(Helper::isPostRequest())
         {
@@ -66,7 +66,7 @@ class UserAddressController extends CommonController
     }
 
     //修改
-    public function userAddressUpdate(Request $request)
+    public function userBonusUpdate(Request $request)
     {
         if(!checkIsNumber($request->input('id',null))){return ReturnData::create(ReturnData::PARAMS_ERROR);}
         $id = $request->input('id');
@@ -82,7 +82,7 @@ class UserAddressController extends CommonController
     }
 
     //删除
-    public function userAddressDelete(Request $request)
+    public function userBonusDelete(Request $request)
     {
         if(!checkIsNumber($request->input('id',null))){return ReturnData::create(ReturnData::PARAMS_ERROR);}
         $id = $request->input('id');
@@ -96,34 +96,23 @@ class UserAddressController extends CommonController
         }
     }
 
-    //设为默认地址
-    public function userAddressSetDefault(Request $request)
+    public function userAvailableBonusList(Request $request)
     {
         //参数
-        if(!checkIsNumber($request->input('id',null))){return ReturnData::create(ReturnData::PARAMS_ERROR);}
-        $id = $request->input('id');
+        $data['user_id'] = Token::$uid;
 
-        $where['id'] = $id;
-        $where['user_id'] = Token::$uid;
-        $res = $this->getLogic()->setDefault($where);
+        $data['min_amount'] = $request->input('min_amount','');
+        if($data['min_amount']=='')
+        {
+            return ReturnData::create(ReturnData::PARAMS_ERROR);
+        }
+
+        $res = $this->getLogic()->getAvailableBonusList($data);
         if($res)
         {
             return ReturnData::create(ReturnData::SUCCESS,$res);
         }
 
-        return ReturnData::create(ReturnData::FAIL);
-    }
-
-    //获取用户默认地址
-    public function userDefaultAddress(Request $request)
-    {
-        $where['user_id'] = Token::$uid;
-        $res = $this->getLogic()->userDefaultAddress($where);
-        if($res)
-        {
-            return ReturnData::create(ReturnData::SUCCESS,$res);
-        }
-
-        return ReturnData::create(ReturnData::FAIL);
+        return ReturnData::create(ReturnData::SYSTEM_FAIL);
     }
 }

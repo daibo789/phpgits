@@ -1,11 +1,11 @@
 <!DOCTYPE html><html><head><meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 <title>资金管理</title><meta name="keywords" content="关键词"><meta name="description" content="描述"><meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
-<link href="<?php echo env('APP_URL'); ?>/css/weixin/style.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/weixin/mobile.js"></script>
-<link href="<?php echo env('APP_URL'); ?>/css/font-awesome.min.css" type="text/css" rel="stylesheet"></head><body>
+<link href="/weixins/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="/weixins/js/jquery.min.js"></script>
+<script type="text/javascript" src="/weixins/js/mobile.js"></script>
+<link href="/weixins/css/font-awesome.min.css" type="text/css" rel="stylesheet"></head><body>
 <div class="classreturn loginsignup">
-    <div class="ds-in-bl return"><a href="javascript:history.back(-1);"><img src="<?php echo env('APP_URL'); ?>/images/weixin/return.png" alt="返回"></a></div>
+    <div class="ds-in-bl return"><a href="javascript:history.back(-1);"><img src="/weixins/images/return.png" alt="返回"></a></div>
     <div class="ds-in-bl tit center"><span>资金管理</span></div>
     <div class="ds-in-bl nav_menu"><a href="<?php echo route('weixin_user_money_list'); ?>">余额明细</a></div>
 </div>
@@ -26,7 +26,7 @@
     <a style="margin:0 10px 10px 10px;background-color:#f1f1f1;text-align:center;color:#000;border:1px solid #bfbfbf;" class="bottoma" href="<?php echo route('weixin_user_withdraw'); ?>">提现</a>
 </div>
 
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/layer/mobile/layer.js"></script>
+<script type="text/javascript" src="/weixins/vender/layer/mobile/layer.js"></script>
 <script>
 function tixian()
 {

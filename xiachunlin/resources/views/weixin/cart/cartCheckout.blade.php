@@ -1,16 +1,16 @@
 <!DOCTYPE html><html><head><meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 <title>确认订单</title><meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
-<link href="<?php echo env('APP_URL'); ?>/css/weixin/style.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/weixin/mobile.js"></script>
-<link href="<?php echo env('APP_URL'); ?>/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+<link href="/weixins/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="/weixins/js/jquery.min.js"></script>
+<script type="text/javascript" src="/weixins/js/mobile.js"></script>
+<link href="/weixins/css/font-awesome.min.css" type="text/css" rel="stylesheet">
 <meta name="keywords" content="关键词"><meta name="description" content="描述"></head><body style="background-color:#f1f1f1;">
 <!-- 订单确认信息-start -->
 <div id="checkout_info">
 <div class="classreturn loginsignup">
-    <div class="ds-in-bl return"><a href="javascript:history.back(-1);"><img src="<?php echo env('APP_URL'); ?>/images/weixin/return.png" alt="返回"></a></div>
+    <div class="ds-in-bl return"><a href="javascript:history.back(-1);"><img src="/weixins/images/return.png" alt="返回"></a></div>
     <div class="ds-in-bl tit center"><span>确认订单</span></div>
-    <div class="ds-in-bl nav_menu"><a href="javascript:void(0);"><img src="<?php echo env('APP_URL'); ?>/images/weixin/class1.png" alt="菜单"></a></div>
+    <div class="ds-in-bl nav_menu"><a href="javascript:void(0);"><img src="/weixins/images/class1.png" alt="菜单"></a></div>
 </div>
 
 @include('weixin.common.headerNav')
@@ -182,7 +182,7 @@ function selectaddress()
 <!-- 收货地址选择-start -->
 <div id="addressList" style="display:none;">
     <div class="classreturn loginsignup">
-        <div class="ds-in-bl return"><a href="javascript:addressback();"><img src="<?php echo env('APP_URL'); ?>/images/weixin/return.png" alt="返回"></a></div>
+        <div class="ds-in-bl return"><a href="javascript:addressback();"><img src="/weixins/images/return.png" alt="返回"></a></div>
         <div class="ds-in-bl tit center"><span>选择收货地址</span></div>
     </div>
     <script>
@@ -202,7 +202,7 @@ function selectaddress()
     
     function setdefault(id)
     {
-        var access_token = '<?php echo $_SESSION['weixin_user_info']['access_token']; ?>';
+        var access_token = '<?php echo $weixin_user_info['access_token']; ?>';
         var url = '<?php echo env('APP_API_URL').'/user_address_setdefault'; ?>';
         
         $.post(url,{access_token:access_token,id:id},function(res)
@@ -299,7 +299,7 @@ function selectaddress()
         
         $.ajax({
             async:false,
-            url:'<?php echo env('APP_API_URL')."/region_list"; ?>',
+            url:'<?php echo http_host(true)."/api/region_list"; ?>',
             data:{id:parent_id},
             type:"GET",
             dataType:"json",
@@ -332,7 +332,7 @@ function selectaddress()
         
         $.ajax({
             async:false,
-            url:'<?php echo env('APP_API_URL')."/region_list"; ?>',
+            url:'<?php echo http_host(true)."/api/region_list"; ?>',
             data:{id:parent_id},
             type:"GET",
             dataType:"json",
@@ -364,7 +364,7 @@ function selectaddress()
         select_id = select_id || 0;
         
         $.ajax({
-            url:'<?php echo env('APP_API_URL')."/region_list"; ?>',
+            url:'<?php echo http_host(true)."/api/region_list"; ?>',
             data:{id:parent_id},
             type:"GET",
             dataType:"json",
@@ -398,11 +398,11 @@ function selectaddress()
     </div>
     
     <!-- 添加收货地址-start -->
-    <script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/layer/mobile/layer.js"></script>
+    <script type="text/javascript" src="/weixins/vender/layer/mobile/layer.js"></script>
     <script>
     function adr_dosubmit()
     {
-        var access_token = '<?php echo $_SESSION['weixin_user_info']['access_token']; ?>';
+        var access_token = '<?php echo $weixin_user_info['access_token']; ?>';
         
         var url = '<?php echo env('APP_API_URL').'/user_address_add'; ?>';
         var name = $("#name").val();
@@ -523,7 +523,7 @@ function change_goods_number(type, id)
     if(!/^[0-9]*$/.test(goods_number)){goods_number = document.getElementById('goods_number'+id).value;}
     document.getElementById('goods_number'+id).value = goods_number;
     
-    var access_token = '<?php echo $_SESSION['weixin_user_info']['access_token']; ?>';
+    var access_token = '<?php echo $weixin_user_info['access_token']; ?>';
 	var url = '<?php echo env('APP_API_URL').'/cart_add'; ?>';
     
     $.post(url,{access_token:access_token,goods_id:id,goods_number:goods_number},function(res)
@@ -551,7 +551,7 @@ function change_goods_number(type, id)
 $(function () {
     //删除购物车商品事件
     $(document).on("click", '.deleteGoods', function (e) {
-        var access_token = '<?php echo $_SESSION['weixin_user_info']['access_token']; ?>';
+        var access_token = '<?php echo $weixin_user_info['access_token']; ?>';
         var cart_ids = new Array();
         cart_ids.push($(this).attr('data-cart-id'));
         layer.open({

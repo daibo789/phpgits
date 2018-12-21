@@ -186,8 +186,8 @@ class GoodsController extends CommonController
                     $tmp[] = ['url'=>$v,'goods_id'=>$id,'add_time'=>time()];
                 }
 
-                DB::table('goods_img')->where(array('goods_id'=>$id))->delete();
-                DB::table('goods_img')->insert($tmp);
+                DB::table('goods_imgs')->where(array('goods_id'=>$id))->delete();
+                DB::table('goods_imgs')->insert($tmp);
             }
 
             success_jump('修改成功', route('admin_goods'));

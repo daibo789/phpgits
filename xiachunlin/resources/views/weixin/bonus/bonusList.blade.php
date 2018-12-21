@@ -1,15 +1,15 @@
 <!DOCTYPE html><html><head><meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 <title>领券中心</title><meta name="keywords" content=""><meta name="description" content=""><meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
-<link href="<?php echo env('APP_URL'); ?>/css/weixin/style.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/weixin/mobile.js"></script></head><body style="background-color:#f1f1f1;">
+<link href="/weixins/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="/weixins/js/jquery.min.js"></script>
+<script type="text/javascript" src="/weixins/js/mobile.js"></script></head><body style="background-color:#f1f1f1;">
 <div class="classreturn loginsignup">
-    <div class="ds-in-bl return"><a href="javascript:history.back(-1);"><img src="<?php echo env('APP_URL'); ?>/images/weixin/return.png" alt="返回"></a></div>
+    <div class="ds-in-bl return"><a href="javascript:history.back(-1);"><img src="/weixins/images/return.png" alt="返回"></a></div>
     <div class="ds-in-bl tit center"><span>领券中心</span></div>
     <?php if(isset($_SESSION['weixin_user_info']['access_token'])){ ?><div class="ds-in-bl nav_menu"><a href="<?php echo route('weixin_user_bonus_list'); ?>" style="color:#999;">我的优惠券</a></div><?php } ?>
 </div>
 
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/layer/mobile/layer.js"></script>
+<script type="text/javascript" src="/weixins/vender/layer/mobile/layer.js"></script>
 <style>
 .bonus_list .flow-have-adr{padding:10px;margin:10px;background-color:#fff;}
 .bonus_list .f-h-adr-title .ect-colory{color:#f45239;font-size:32px;}
@@ -36,7 +36,7 @@ $(function(){
     var ajaxload  = false;
     var maxpage   = false;
     var startpage = 1;
-    var totalpage = <?php echo $totalpage; ?>;
+    var totalpage = '<?php echo $totalpage; ?>;'
     
     var tmp_url   = window.location.href;
     msg = tmp_url.split("#");
@@ -93,7 +93,7 @@ $(function(){
 
 function getbonus(bonus_id)
 {
-    var url = '<?php echo env('APP_API_URL').'/user_bonus_add'; ?>';
+    var url = '<?php echo http_host(true).'/api/user_bonus_add'; ?>';
     var access_token = '<?php if(isset($_SESSION['weixin_user_info']['access_token'])){echo $_SESSION['weixin_user_info']['access_token'];} ?>';
     if(access_token=='')
     {

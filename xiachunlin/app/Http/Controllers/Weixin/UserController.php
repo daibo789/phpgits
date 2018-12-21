@@ -62,11 +62,13 @@ class UserController extends CommonController
     //我的分销
     public function userDistribution(Request $request)
     {
+        $user_info =  session('weixin_user_info');
+        $data['weixin_user_info'] = $user_info;
         //获取会员信息
         $postdata = array(
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_info";
+        $url = http_host(true)."/api/user_info";
         $res = curl_request($url,$postdata,'GET');
         $data['user_info'] = $res['data'];
 
@@ -78,10 +80,10 @@ class UserController extends CommonController
         $postdata = array(
             'limit'  => $pagesize,
             'offset' => $offset,
-            'parent_id' => $_SESSION['weixin_user_info']['id'],
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'parent_id' => $user_info['id'],
+            'access_token' => $user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_list";
+        $url =  http_host(true)."/api/user_list";
         $res = curl_request($url,$postdata,'GET');
         $data['list'] = $res['data']['list'];
 
@@ -112,10 +114,13 @@ class UserController extends CommonController
     //资金管理
     public function userAccount(Request $request)
     {
+        $user_info =  session('weixin_user_info');
+        $data['weixin_user_info'] = $user_info;
+
         $postdata = array(
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_info";
+        $url = http_host(true)."/api/user_info";
         $res = curl_request($url,$postdata,'GET');
         $data['user_info'] = $res['data'];
 
@@ -183,12 +188,17 @@ class UserController extends CommonController
     //用户充值
     public function userRecharge(Request $request)
     {
-        return view('weixin.user.userRecharge');
+        $user_info =  session('weixin_user_info');
+        $data['weixin_user_info'] = $user_info;
+
+        return view('weixin.user.userRecharge',$data);
     }
 
     //充值明细
     public function userRechargeOrder(Request $request)
     {
+        $user_info =  session('weixin_user_info');
+        $data['weixin_user_info'] = $user_info;
         $pagesize = 10;
         $offset = 0;
         if(isset($_REQUEST['page'])){$offset = ($_REQUEST['page']-1)*$pagesize;}
@@ -286,6 +296,8 @@ class UserController extends CommonController
     //余额明细
     public function userMoneyList(Request $request)
     {
+        $user_info =  session('weixin_user_info');
+        $data['weixin_user_info'] = $user_info;
         $pagesize = 10;
         $offset = 0;
         if(isset($_REQUEST['page'])){$offset = ($_REQUEST['page']-1)*$pagesize;}
@@ -293,9 +305,9 @@ class UserController extends CommonController
         $postdata = array(
             'limit'  => $pagesize,
             'offset' => $offset,
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_money_list";
+        $url = http_host(true)."/api/user_money_list";
         $res = curl_request($url,$postdata,'GET');
         $data['list'] = $res['data']['list'];
 
@@ -304,7 +316,6 @@ class UserController extends CommonController
         if(isset($_REQUEST['page_ajax']) && $_REQUEST['page_ajax']==1)
         {
             $html = '';
-
             if($res['data']['list'])
             {
                 foreach($res['data']['list'] as $k => $v)
@@ -333,6 +344,8 @@ class UserController extends CommonController
     //积分明细
     public function userPointList(Request $request)
     {
+        $user_info =  session('weixin_user_info');
+        $data['weixin_user_info'] = $user_info;
         $pagesize = 10;
         $offset = 0;
         if(isset($_REQUEST['page'])){$offset = ($_REQUEST['page']-1)*$pagesize;}
@@ -340,9 +353,9 @@ class UserController extends CommonController
         $postdata = array(
             'limit'  => $pagesize,
             'offset' => $offset,
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_point_list";
+        $url = http_host(true)."/api/user_point_list";
         $res = curl_request($url,$postdata,'GET');
         $data['list'] = $res['data']['list'];
 
@@ -380,6 +393,8 @@ class UserController extends CommonController
     //用户优惠券列表
     public function userBonusList(Request $request)
     {
+        $user_info =  session('weixin_user_info');
+        $data['weixin_user_info'] = $user_info;
         //商品列表
         $pagesize = 10;
         $offset = 0;
@@ -389,9 +404,9 @@ class UserController extends CommonController
             'limit'  => $pagesize,
             'offset' => $offset,
             'status' => 0,
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_bonus_list";
+        $url = http_host(true)."/api/user_bonus_list";
         $res = curl_request($url,$postdata,'GET');
         $data['list'] = $res['data']['list'];
 
@@ -470,6 +485,8 @@ class UserController extends CommonController
     //浏览记录
     public function userGoodsHistory(Request $request)
     {
+        $user_info =  session('weixin_user_info');
+        $data['weixin_user_info'] = $user_info;
         //商品列表
         $pagesize = 10;
         $offset = 0;
@@ -478,9 +495,9 @@ class UserController extends CommonController
         $postdata = array(
             'limit'  => $pagesize,
             'offset' => $offset,
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_goods_history_list";
+        $url = http_host(true)."/api/user_goods_history_list";
         $res = curl_request($url,$postdata,'GET');
         $data['user_goods_history'] = $res['data']['list'];
 

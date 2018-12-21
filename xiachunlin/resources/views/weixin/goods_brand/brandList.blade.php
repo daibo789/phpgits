@@ -13,7 +13,12 @@
     <div class="brand-list">
 <?php if($list){ ?>
         <ul><?php foreach($list as $k=>$v){ ?>
-        <li><a href="<?php echo route('weixin_goods_list',['brand_id'=>$v['id']]); ?>"><img src="<?php echo $v['litpic']; ?>" alt="<?php echo $v['title']; ?>"></a></li>
+        <li style="width: 50%; height: 50%;"><a style="width: 100%;height: 80%" href="<?php echo route('weixin_goods_list',['brand_id'=>$v['id']]); ?>">
+                <img  src="<?php echo $v['litpic']; ?>" alt="<?php echo $v['title']; ?>">
+                <input  type="text" value="{{$v['title']}}" style="position: relative;bottom: 5px"/>
+            </a>
+
+        </li>
         <?php } ?>
         <div class="cl"></div></ul><?php }else{ ?>
     <div style="text-align:center;line-height:40px;color:#999;">暂无记录</div><?php } ?>

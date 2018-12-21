@@ -5,8 +5,12 @@
 <script type="text/javascript" src="/weixins/js/mobile.js"></script>
 <meta name="keywords" content="关键词"><meta name="description" content="描述"></head><body style="background-color:#f1f1f1;">
 
-@include('weixin.common.headerNav')
 
+<div class="classreturn loginsignup">
+    <div class="ds-in-bl return"><a href="javascript:history.back(-1);"><img src="/weixins/images/return.png" alt="返回"></a></div>
+    <div class="ds-in-bl tit center"><span>详情</span></div>
+</div>
+@include('weixin.common.headerNav')
 <!--商品详情-start-->
 <div class="goods_detail">
 <!--顶部滚动广告栏-start-->
@@ -45,15 +49,15 @@ var swiper = new Swiper('.swiper-container', {
 <!--顶部滚动广告栏-end-->
 
 <div class="goods-header">
-    <span class="wish-add fr<?php if(isset($post['is_collect']) && $post['is_collect']>=1){echo ' wish-add-activate';} ?>" onclick="collect_goods()">收藏</span><h1 class="title"><?php echo $post['title']; ?></h1>
-    
+    <span class="wish-add fr<?php if(isset($post['is_attention']) && $post['is_attention']>=1){echo ' wish-add-activate';} ?>" onclick="collect_goods()">收藏</span><h1 class="title"><?php echo $post['title']; ?></h1>
+
     <div class="goods-price">
         <div class="current-price">
             <span>￥</span><i class="price"><?php echo $post['price']; ?></i>
         </div>
         <?php if($post['is_promote_goods']>0){ ?><span class="btn-retail">促销</span><?php } ?>
     </div>
-    
+
     <div class="stock-detail table-cell">
         <dl>
             <dt>运费:</dt>
@@ -68,8 +72,8 @@ var swiper = new Swiper('.swiper-container', {
             <dd><?php echo $post['sale']; ?></dd>
         </dl>
     </div>
-    
-    <div class="goods-comment">用户评价<span>共<?php echo $post['goods_comments_num']; ?>条评价 ></span></div>
+
+    <div class="goods-comment" onclick="goods_common()">用户评价<span>共<?php echo $post['goods_comments_num']; ?>条评价 ></span></div>
 </div>
 
 <div class="goods-content">
@@ -82,7 +86,7 @@ var swiper = new Swiper('.swiper-container', {
 <!-- 底部弹出层 -->
 <div class="pop_box" style="display:none;" id="master">
   <div class="goods_info_pop" style="padding-bottom:0px;">
-     <div class="cart_list" >                
+     <div class="cart_list" >
         <div class="cart_list_info goods_list_item">
           <div class="cart_list_img">
             <img src="<?php echo $post['goods_img']; ?>"  style="width:100%; height:100%;">
@@ -90,22 +94,22 @@ var swiper = new Swiper('.swiper-container', {
           <div class="cart_goods_info">
             <div class="cart_list_name">
               <div class="cart_detail_gray" style=""><span style="" class="cart_detail_gray_name"><?php echo $post['title']; ?></span></div>
-              <div class="cart_detail_gray" style="">                        
+              <div class="cart_detail_gray" style="">
                 <p class="cart_sum" id="total_price1_296">￥<span class="attr_price"><?php echo $post['price']; ?></span></p>
                 <p class="goods_type">库存<span class="attr_storage"><?php echo $post['goods_number']; ?></span>件</p>
               </div>
             </div>
           </div>  <!--cart_info-->
-        </div>   
-      </div><!--item-->  
-            
+        </div>
+      </div><!--item-->
+
       <div class="pop_num">
         <span>数量</span>
         <div class="pop_sum">
           <div class="cart_num_control pop_sum">
-            <input type="button" value="-" class="cart_num_button" onclick="cart_num_sub()"> 
-            <input type="text" value="1" class="cart_num_text" id="num"> 
-            <input type="button" value="+" class="cart_num_button" onclick="cart_num_add()"> 
+            <input type="button" value="-" class="cart_num_button" onclick="cart_num_sub()">
+            <input type="text" value="1" class="cart_num_text" id="num">
+            <input type="button" value="+" class="cart_num_button" onclick="cart_num_add()">
           </div>
         </div>
       </div>
@@ -132,7 +136,7 @@ function mastershow(confirm)
         $(".btnBox").show();
         $(".confirmBtn").hide();
     }
-    
+
     $("#master").show();
 }
 function masterunshow()
@@ -142,7 +146,7 @@ function masterunshow()
 function cart_num_sub()
 {
     var num = $('#num').val();
-    
+
     if(num>1)
     {
         num = parseInt(num)-1;
@@ -154,44 +158,46 @@ function cart_num_add()
     var goods_number = $('#goods_number').val();
     var num = $('#num').val();
     num = parseInt(num)+1;
-    
+
     if(goods_number<num)
     {
         //提示
         layer.open({
             content: '库存不足'
             ,skin: 'msg'
-            ,time: 2 //2秒后自动关闭
+            ,time: 2000 //2秒后自动关闭
         });
-        
+
         return false;
     }
-    
+
     $('#num').val(num);
 }
 
+//购买 和添加购物车
 function dosubmit()
 {
-    var url = '<?php echo env('APP_API_URL').'/cart_add'; ?>';
-    var access_token = '<?php if(isset($_SESSION['weixin_user_info']['access_token'])){echo $_SESSION['weixin_user_info']['access_token'];} ?>';
+
+    var url = '<?php echo http_host(true).'/api/cart_add'; ?>';
+    var access_token = '<?php if(isset($weixin_user_info['access_token'])){echo $weixin_user_info['access_token'];} ?>';
     if(access_token=='')
     {
         //提示
         layer.open({
             content: '请先登录'
             ,skin: 'msg'
-            ,time: 2 //2秒后自动关闭
+            ,time: 2000 //2秒后自动关闭
         });
-        
+
         setTimeout("location.href = '<?php echo route('weixin_login',array('return_url'=>route('weixin_goods_detail',array('id'=>$post['id'])))); ?>'",1000);
-        
+
         return false;
     }
-    
+
     var cart_type = $("#cart_type").val();
     var goods_number = $("#num").val();
     var goods_id = $("#id").val();
-    
+
     $.post(url,{access_token:access_token,goods_id:goods_id,goods_number:goods_number},function(res)
 	{
 		if(res.code==0)
@@ -201,12 +207,12 @@ function dosubmit()
                 location.href = '<?php echo substr(route('weixin_cart_checkout',array('ids'=>1)),0,-1); ?>' + res.data;
                 return false;
             }
-            
+
             //提示
             layer.open({
                 content: res.msg
                 ,skin: 'msg'
-                ,time: 2 //2秒后自动关闭
+                ,time: 2000 //2秒后自动关闭
             });
 		}
 		else
@@ -215,34 +221,34 @@ function dosubmit()
             layer.open({
                 content: res.msg
                 ,skin: 'msg'
-                ,time: 2 //2秒后自动关闭
+                ,time: 2000 //2秒后自动关闭
             });
 		}
 	},'json');
-        
+
     $("#master").hide();
 }
 
 function collect_goods()
 {
-    var url = '<?php if(isset($post['is_collect']) && $post['is_collect']>=1){echo env('APP_API_URL').'/collect_goods_delete';}else{echo env('APP_API_URL').'/collect_goods_add';} ?>';
-    var access_token = '<?php if(isset($_SESSION['weixin_user_info']['access_token'])){echo $_SESSION['weixin_user_info']['access_token'];} ?>';
+    var url = '<?php if(isset($post['is_attention']) && $post['is_attention']>=1){http_host(true).'/api/collect_goods_delete';}else{echo http_host(true).'/api/collect_goods_add';} ?>';
+    var access_token = '<?php if(isset($weixin_user_info['access_token'])){echo $weixin_user_info['access_token'];} ?>';
     var goods_id = $("#id").val();
-    
+
     if(access_token=='')
     {
         //提示
         layer.open({
             content: '请先登录'
             ,skin: 'msg'
-            ,time: 2 //2秒后自动关闭
+            ,time: 2000 //2秒后自动关闭
         });
-        
+
         setTimeout("location.href = '<?php echo route('weixin_login',array('return_url'=>route('weixin_goods_detail',array('id'=>$post['id'])))); ?>'",1000);
-        
+
         return false;
     }
-    
+
     $.post(url,{access_token:access_token,goods_id:goods_id},function(res)
 	{
 		if(res.code==0)
@@ -251,16 +257,27 @@ function collect_goods()
 		}
 		else
 		{
-            
+            layer.open({
+                content: res.msg
+                ,skin: 'msg'
+                ,time: 2000 //2秒后自动关闭
+            });
 		}
-        
-        layer.open({
-            content: res.msg
-            ,skin: 'msg'
-            ,time: 2 //2秒后自动关闭
-        });
+
 	},'json');
 }
+
+function goods_common()
+{
+    //提示
+    layer.open({
+        content: '次功能暂时没有开放'
+        ,skin: 'msg'
+        ,time: 2000 //2秒后自动关闭
+    });
+}
+
+
 </script>
 
 <!-- 底部按钮开始 -->

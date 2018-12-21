@@ -1,11 +1,11 @@
 <!DOCTYPE html><html><head><meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 <title>充值</title><meta name="keywords" content="关键词"><meta name="description" content="描述"><meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
-<link href="<?php echo env('APP_URL'); ?>/css/weixin/style.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/weixin/mobile.js"></script>
-<link href="<?php echo env('APP_URL'); ?>/css/font-awesome.min.css" type="text/css" rel="stylesheet"></head><body>
+<link href="/weixins/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="/weixins/js/jquery.min.js"></script>
+<script type="text/javascript" src="/weixins/js/mobile.js"></script>
+<link href="/weixins/css/font-awesome.min.css" type="text/css" rel="stylesheet"></head><body>
 <div class="classreturn loginsignup">
-    <div class="ds-in-bl return"><a href="javascript:history.back(-1);"><img src="<?php echo env('APP_URL'); ?>/images/weixin/return.png" alt="返回"></a></div>
+    <div class="ds-in-bl return"><a href="javascript:history.back(-1);"><img src="/weixins/images/return.png" alt="返回"></a></div>
     <div class="ds-in-bl tit center"><span>充值</span></div>
     <div class="ds-in-bl nav_menu"><a href="<?php echo route('weixin_user_recharge_order'); ?>">充值明细</a></div>
 </div>
@@ -28,7 +28,7 @@
     实际到账：¥ 100.00</p> -->
 </div>
 
-<script type="text/javascript" src="<?php echo env('APP_URL'); ?>/js/layer/mobile/layer.js"></script>
+<script type="text/javascript" src="/weixins/vender/layer/mobile/layer.js"></script>
 <script>
 function chongzhi()
 {
@@ -64,10 +64,11 @@ function chongzhi()
         content: '确定要充值吗？'
         ,btn: ['确定', '取消']
         ,yes: function(){
-            var url = '<?php echo env('APP_API_URL')."/user_recharge_add"; ?>';
+            var url = '<?php echo http_host(true)."/api/user_recharge_add"; ?>';
+            alert(url);
             var pay_type = $('#pay_type').val();
             
-            $.post(url,{access_token:'<?php echo $_SESSION['weixin_user_info']['access_token']; ?>',money:money,pay_type:pay_type},function(res)
+            $.post(url,{access_token:'{{$weixin_user_info['access_token']}}',money:money,pay_type:pay_type},function(res)
             {
                 //提示
                 layer.open({
@@ -75,14 +76,14 @@ function chongzhi()
                     ,skin: 'msg'
                     ,time: 2 //2秒后自动关闭
                 });
-                
+
                 if(res.code==0)
                 {
                     location.href = '<?php echo route('weixin_user_recharge_order_detail'); ?>?id=' + res.data;
                 }
                 else
                 {
-                    
+
                 }
             },'json');
         }

@@ -5,33 +5,37 @@ namespace App\Http\Controllers\Weixin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Common\ReturnCode;
+use App\Common\Wechat\UserManager;
 
 class GoodsController extends CommonController
 {
-    public function __construct()
+    protected $userManager;
+    public function __construct(UserManager $userManager)
     {
         parent::__construct();
+        $this->userManager = $userManager;
     }
 
     //商品详情
     public function goodsDetail($id)
     {
-
+        $user_info =  session('weixin_user_info');
+        $data['weixin_user_info'] = $user_info;
         $postdata = array(
             'id'  => $id
         );
-        if(isset($_SESSION['weixin_user_info'])){$postdata['user_id']=$_SESSION['weixin_user_info']['id'];}
+        if(isset($user_info)){$postdata['user_id']=$user_info['id'];}
         $url = http_host(true)."/api/goods_detail";
         $res = curl_request($url,$postdata,'GET');
         $data['post'] = $res['data'];
         if(!$data['post']){$this->error_jump(ReturnCode::NO_FOUND,route('weixin'),3);}
 
         //添加浏览记录
-        if(isset($_SESSION['weixin_user_info']))
+        if(isset($user_info))
         {
             $postdata = array(
                 'goods_id'  => $id,
-                'access_token' => $_SESSION['weixin_user_info']['access_token']
+                'access_token' => $user_info['access_token']
             );
             $url = http_host(true)."/api/user_goods_history_add";
             curl_request($url,$postdata,'POST');
@@ -43,6 +47,7 @@ class GoodsController extends CommonController
     //商品列表
     public function goodsList(Request $request)
     {
+
         if($request->input('typeid', null) != null){$param['typeid'] = $request->input('typeid');}
         if($request->input('tuijian', null) != null){$param['tuijian'] = $request->input('tuijian');}
         if($request->input('keyword', null) != null){$param['keyword'] = $request->input('keyword');}
@@ -58,7 +63,7 @@ class GoodsController extends CommonController
         $postdata['limit'] = 10;
         $postdata['offset'] = 0;
 
-        $url = env('APP_API_URL')."/goods_list";
+        $url = http_host(true)."/api/goods_list";
         $res = curl_request($url,$postdata,'GET');
         $data['goods_list'] = $res['data']['list'];
         $data['request_param'] = $param;
@@ -66,7 +71,7 @@ class GoodsController extends CommonController
         return view('weixin.goods.goodsList', $data);
     }
 
-    //商品列表
+    //商品类型列表
     public function categoryGoodsList(Request $request)
     {
         $data['typeid'] = 0;
@@ -121,7 +126,7 @@ class GoodsController extends CommonController
         $url = http_host(true)."/api/goodstype_list";
         $res = curl_request($url,$postdata,'GET');
         $data['goodstype_list'] = $res['data']['list'];
-
+//        dd($res);
         return view('weixin.goods.categoryGoodsList', $data);
     }
 }

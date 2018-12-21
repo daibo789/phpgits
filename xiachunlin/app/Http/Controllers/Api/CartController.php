@@ -6,14 +6,13 @@ use Log;
 use DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Model\Admin\UserAddress;
-use App\Http\Logic\UserAddressLogic;
 use App\Common\ReturnData;
 use App\Common\Helper;
 use App\Common\Token;
+use App\Model\Admin\Cart;
+use App\Http\Logic\CartLogic;
 
-
-class UserAddressController extends CommonController
+class CartController extends CommonController
 {
     public function __construct()
     {
@@ -22,28 +21,24 @@ class UserAddressController extends CommonController
 
     public function getLogic()
     {
-        return logic('UserAddress');
+        return logic('Cart');
     }
 
-    public function userAddressList(Request $request)
+    public function cartList(Request $request)
     {
-
         //参数
-        $limit = $request->input('limit', 10);
-        $offset = $request->input('offset', 0);
-
         $where['user_id'] = Token::$uid;
-
-        $res = $this->getLogic()->getList($where, array('id', 'desc'), '*', $offset, $limit);
+        $res = $this->getLogic()->getList($where);
 
         return ReturnData::create(ReturnData::SUCCESS,$res);
     }
 
-    public function userAddressDetail(Request $request)
+    public function cartDetail(Request $request)
     {
         //参数
-        if($request->input('id',null) != null){$where['id'] = $request->input('id');}
-        $where['user_id'] = Token::$uid;
+        if(!checkIsNumber($request->input('id',null))){return ReturnData::create(ReturnData::PARAMS_ERROR);}
+        $id = $request->input('id');
+        $where['id'] = $id;
 
         $res = $this->getLogic()->getOne($where);
         if(!$res)
@@ -54,19 +49,26 @@ class UserAddressController extends CommonController
         return ReturnData::create(ReturnData::SUCCESS,$res);
     }
 
-    //添加
-    public function userAddressAdd(Request $request)
+    /**
+     * 添加商品到购物车
+     *
+     * @access  public
+     * @param   integer $goods_id     商品编号
+     * @param   integer $goods_number 商品数量
+     * @param   json   $property      规格值对应的id json数组，预留
+     * @return  boolean
+     */
+    public function cartAdd(Request $request)
     {
         if(Helper::isPostRequest())
         {
             $_POST['user_id'] = Token::$uid;
-
             return $this->getLogic()->add($_POST);
         }
     }
 
     //修改
-    public function userAddressUpdate(Request $request)
+    public function cartUpdate(Request $request)
     {
         if(!checkIsNumber($request->input('id',null))){return ReturnData::create(ReturnData::PARAMS_ERROR);}
         $id = $request->input('id');
@@ -75,14 +77,14 @@ class UserAddressController extends CommonController
         {
             unset($_POST['id']);
             $where['id'] = $id;
-            $where['user_id'] = Token::$uid;
+            //$where['user_id'] = Token::$uid;
 
             return $this->getLogic()->edit($_POST,$where);
         }
     }
 
     //删除
-    public function userAddressDelete(Request $request)
+    public function cartDelete(Request $request)
     {
         if(!checkIsNumber($request->input('id',null))){return ReturnData::create(ReturnData::PARAMS_ERROR);}
         $id = $request->input('id');
@@ -96,34 +98,29 @@ class UserAddressController extends CommonController
         }
     }
 
-    //设为默认地址
-    public function userAddressSetDefault(Request $request)
+    //清空购物车
+    public function cartClear(Request $request)
     {
-        //参数
-        if(!checkIsNumber($request->input('id',null))){return ReturnData::create(ReturnData::PARAMS_ERROR);}
-        $id = $request->input('id');
-
-        $where['id'] = $id;
-        $where['user_id'] = Token::$uid;
-        $res = $this->getLogic()->setDefault($where);
-        if($res)
+        if(Helper::isPostRequest())
         {
-            return ReturnData::create(ReturnData::SUCCESS,$res);
-        }
+            $where['user_id'] = Token::$uid;
 
-        return ReturnData::create(ReturnData::FAIL);
+            return $this->getLogic()->del($where);
+        }
     }
 
-    //获取用户默认地址
-    public function userDefaultAddress(Request $request)
+    //购物车结算商品列表
+    public function cartCheckoutGoodsList(Request $request)
     {
+        //参数
+        $where['ids'] = $request->input('ids','');
         $where['user_id'] = Token::$uid;
-        $res = $this->getLogic()->userDefaultAddress($where);
-        if($res)
+
+        if($where['ids']=='')
         {
-            return ReturnData::create(ReturnData::SUCCESS,$res);
+            return ReturnData::create(ReturnData::PARAMS_ERROR);
         }
 
-        return ReturnData::create(ReturnData::FAIL);
+        return $this->getLogic()->cartCheckoutGoodsList($where);
     }
 }

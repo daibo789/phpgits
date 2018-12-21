@@ -241,8 +241,9 @@ function adr_dosubmit()
                 ,skin: 'msg'
                 ,time: 2 //2秒后自动关闭
             });
-            
-            window.history.back();
+            // window.history.back();
+            // window.location.reload();
+            window.location.href=document.referrer;
 		}
 		else
 		{

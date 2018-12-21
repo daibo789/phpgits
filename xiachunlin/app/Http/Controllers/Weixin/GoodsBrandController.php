@@ -19,6 +19,7 @@ class GoodsBrandController extends CommonController
         $url = http_host(true)."/api/goodsbrand_detail";
         $res = curl_request($url,$postdata,'GET');
         $data['post'] = $res['data'];
+
         if(!$data['post']){$this->error_jump(ReturnCode::NO_FOUND,route('weixin'),3);}
 
         return view('weixin.goods_brand.brandDetail', $data);
@@ -27,6 +28,7 @@ class GoodsBrandController extends CommonController
     //商品品牌列表
     public function brandList(Request $request)
     {
+
         //商品列表
         $postdata['limit'] = 10;
         $postdata['offset'] = 0;
@@ -34,7 +36,7 @@ class GoodsBrandController extends CommonController
         $url = http_host(true)."/api/goodsbrand_list";
         $res = curl_request($url,$postdata,'GET');
         $data['list'] = $res['data']['list'];
-
+//        dd($res);
         return view('weixin.goods_brand.brandList', $data);
     }
 }

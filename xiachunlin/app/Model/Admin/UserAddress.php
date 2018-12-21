@@ -150,8 +150,14 @@ class UserAddress extends BaseModel
      */
     public function edit($data, $where = array())
     {
-        $res = $this->getDb();
-        return $res->where($where)->update(parent::filterTableColumn($data, $this->table));
+        $res = $this->getDb()->where(parent::filterTableColumn($data, $this->table))->where($where)->first();
+        if ($res){
+            return true;
+        }else{
+
+            $sta =  $this->getDb()->where($where)->update(parent::filterTableColumn($data, $this->table));
+            return $sta;
+        }
     }
 
     /**

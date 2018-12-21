@@ -48,49 +48,54 @@ class CartController extends CommonController
     //购物车结算
     public function cartCheckout($ids)
     {
+
+        $weixin_user_info = $this->userManager->getUserInfo();
+        $data['weixin_user_info'] = $weixin_user_info;
+//        dd($weixin_user_info);
         //支付方式列表
         $postdata = array(
             'status' => 1,
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $weixin_user_info['access_token']
         );
-        $url = env('APP_API_URL')."/payment_list";
+        $url = http_host(true)."/api/payment_list";
         $res = curl_request($url,$postdata,'GET');
         $data['payment_list'] = $res['data']['list'];
 
         //用户默认收货地址
         $postdata = array(
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' =>$weixin_user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_default_address";
+        $url = http_host(true)."/api/user_default_address";
         $res = curl_request($url,$postdata,'GET');
         $data['user_default_address'] = $res['data'];
 
         //收货地址列表
         $postdata = array(
             'limit'  => 100,
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $weixin_user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_address_list";
+        $url = http_host(true)."/api/user_address_list";
         $res = curl_request($url,$postdata,'GET');
         $data['address_list'] = $res['data']['list'];
         $data['cartids'] = $ids;
 
         //获取会员信息
         $postdata = array(
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $weixin_user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_info";
+        $url = http_host(true)."/api/user_info";
         $res = curl_request($url,$postdata,'GET');
         $data['user_info'] = $res['data'];
 
         //购物车结算商品列表
         $postdata = array(
             'ids' => $ids,
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $weixin_user_info['access_token']
         );
-        $url = env('APP_API_URL')."/cart_checkout_goods_list";
+        $url = http_host(true)."/api/cart_checkout_goods_list";
         $res = curl_request($url,$postdata,'GET');
         $data['checkout_goods'] = $res['data'];
+
         if(empty($data['checkout_goods']['list'])){$this->error_jump(ReturnCode::NO_FOUND);}
 
         //判断余额是否足够
@@ -98,15 +103,16 @@ class CartController extends CommonController
         if($data['checkout_goods']['total_price']>$data['user_info']['money']){$is_balance_enough = 0;}
         $data['is_balance_enough'] = $is_balance_enough;
 
+//        dd( $data['checkout_goods']['total_price']);
         //获取用户优惠券列表
         $postdata = array(
             'min_amount' => $data['checkout_goods']['total_price'],
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $weixin_user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_available_bonus_list";
+        $url = http_host(true)."/api/user_available_bonus_list";
         $res = curl_request($url,$postdata,'GET');
         $data['bonus_list'] = $res['data']['list'];
-
+//        dd('dsadasd');
         return view('weixin.cart.cartCheckout', $data);
     }
 

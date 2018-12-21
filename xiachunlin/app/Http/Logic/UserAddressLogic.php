@@ -164,14 +164,13 @@ class UserAddressLogic extends BaseLogic
         
         $validator = $this->getValidate($where,'del');
         if ($validator->fails()){return ReturnData::create(ReturnData::PARAMS_ERROR, null, $validator->errors()->first());}
-        
         $res = $this->getModel()->del($where);
         
         if($res)
         {
             if ($address = $this->getModel()->getOne(['user_id'=>$where['user_id']]))
             {
-                if(model('User')->getDb()->where(['id'=>$where['user_id'],'address_id'=>$where['id']])->update(['address_id'=>$address->id]))
+                if(model('Admin\\User')->getDb()->where(['id'=>$where['user_id'],'address_id'=>$where['id']])->update(['address_id'=>$address->id]))
                 {
                     $this->getModel()->edit(array('is_default' => UserAddress::IS_DEFAULT),['id'=>$address->id]);
                 }
@@ -179,7 +178,7 @@ class UserAddressLogic extends BaseLogic
             
             return ReturnData::create(ReturnData::SUCCESS,$res);
         }
-        
+
         return ReturnData::create(ReturnData::FAIL);
     }
     
@@ -201,15 +200,23 @@ class UserAddressLogic extends BaseLogic
      */
     public function setDefault($where)
     {
-        if ($this->getModel()->edit(['is_default'=>UserAddress::IS_DEFAULT],$where))
-        {
-            $this->getModel()->getDb()->where('user_id', $where['user_id'])->where('id', '<>', $where['id'])->update(['is_default'=>0]);
+        $ad = $this->getModel()->getOne($where);
+        if ($ad->is_default == UserAddress::IS_DEFAULT){
+            $res = $this->getModel()->getDb()->where('user_id', $where['user_id'])->where('id', '<>', $where['id'])->update(['is_default'=>0]);
             model('Admin\\User')->edit(['address_id'=>$where['id']],['id'=>$where['user_id']]);
-                
             return true;
+        }else{
+            $ss = $this->getModel()->edit(['is_default'=>UserAddress::IS_DEFAULT],$where);
+            if ($ss)
+            {
+                $res = $this->getModel()->getDb()->where('user_id', $where['user_id'])->where('id', '<>', $where['id'])->update(['is_default'=>0]);
+                model('Admin\\User')->edit(['address_id'=>$where['id']],['id'=>$where['user_id']]);
+                return true;
+            } else{
+                return false;
+            }
         }
-        
-        return false;
+
     }
     
     // 获取默认地址

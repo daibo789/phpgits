@@ -3,18 +3,19 @@
 namespace App\Model\Admin;
 
 use App\Http\Model\BaseModel;
+
 use DB;
 use Log;
-
-
-class CollectGoods extends BaseModel
+class Payment extends BaseModel
 {
-    //商品收藏
+    //用户优惠券
 
-    protected $table = 'collect_goods';
+    protected $table = 'payments';
     public $timestamps = false;
     protected $hidden = array();
     protected $guarded = array(); //$guarded包含你不想被赋值的字段数组。
+
+    const IS_SHOW = 1; // 可用支付方式
 
     public function getDb()
     {
