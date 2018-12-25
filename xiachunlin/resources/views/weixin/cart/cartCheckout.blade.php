@@ -203,7 +203,7 @@ function selectaddress()
     function setdefault(id)
     {
         var access_token = '<?php echo $weixin_user_info['access_token']; ?>';
-        var url = '<?php echo env('APP_API_URL').'/user_address_setdefault'; ?>';
+        var url = '<?php echo http_host(true).'/api/user_address_setdefault'; ?>';
         
         $.post(url,{access_token:access_token,id:id},function(res)
         {
@@ -404,7 +404,7 @@ function selectaddress()
     {
         var access_token = '<?php echo $weixin_user_info['access_token']; ?>';
         
-        var url = '<?php echo env('APP_API_URL').'/user_address_add'; ?>';
+        var url = '<?php echo http_host(true).'/api/user_address_add'; ?>';
         var name = $("#name").val();
         var mobile = $("#mobile").val();
         var address = $("#address").val();
@@ -524,7 +524,7 @@ function change_goods_number(type, id)
     document.getElementById('goods_number'+id).value = goods_number;
     
     var access_token = '<?php echo $weixin_user_info['access_token']; ?>';
-	var url = '<?php echo env('APP_API_URL').'/cart_add'; ?>';
+	var url = '<?php echo http_host(true).'/api/cart_add'; ?>';
     
     $.post(url,{access_token:access_token,goods_id:id,goods_number:goods_number},function(res)
 	{
@@ -561,7 +561,7 @@ $(function () {
                 layer.close(index);
                 $.ajax({
                     type : "POST",
-                    url:"<?php echo env('APP_API_URL').'/cart_delete'; ?>",
+                    url:"<?php echo http_host(true).'/apid/cart_delete'; ?>",
                     dataType:'json',
                     data: {access_token:access_token,id:cart_ids},
                     success: function(res){

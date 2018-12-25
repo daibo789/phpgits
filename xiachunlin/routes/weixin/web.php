@@ -58,7 +58,7 @@ Route::group(['prefix' => 'wx', 'namespace' => 'Weixin', 'middleware' => ['web',
     Route::get('/cart_checkout/{ids}', 'CartController@cartCheckout')->name('weixin_cart_checkout');
     Route::post('/cart_done', 'CartController@cartDone')->name('weixin_cart_done');
     //订单
-    Route::get('/order_pay/{id}', 'OrderController@pay')->name('weixin_order_pay'); //订单支付
+    Route::get('/order_pay', 'OrderController@pay')->name('weixin_order_pay'); //订单支付
     Route::post('/order_dopay', 'OrderController@dopay')->name('weixin_order_dopay'); //订单支付
     Route::get('/order_list', 'OrderController@orderList')->name('weixin_order_list'); //全部订单列表
     Route::get('/order_detail', 'OrderController@orderDetail')->name('weixin_order_detail'); //订单详情

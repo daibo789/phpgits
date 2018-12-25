@@ -104,8 +104,8 @@ class UserAddress extends BaseModel
      */
     public function getOne($where, $field = '*')
     {
+//        dd($where);
         $res = $this->getDb();
-
         if($where){$res = $res->where($where);}
         if($field){if(is_array($field)){$res = $res->select($field);}else{$res = $res->select(\DB::raw($field));}}
 

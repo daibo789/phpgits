@@ -22,7 +22,7 @@
                 <!--商品勾选按钮-->
                 <span onclick="checkGoods(this)" class="che">
                  <i>
-                     <input name="checkItem" type="checkbox" style="display:none;" data-goods-id="<?php echo $v['goods_id']; ?>" data-cart-id="<?php echo $v['id']; ?>">
+                     <input name="checkItem" type="checkbox" style="display:block;" data-goods-id="<?php echo $v['goods_id']; ?>" data-cart-id="<?php echo $v['id']; ?>">
                  </i>
                  </span>
             </div>
@@ -37,7 +37,7 @@
                 <!--商品名-->
                 <p class="tit"><?php echo $v['title']; ?></p>
                 <!--删除按钮-->
-                <a href="javascript:void(0);" class="delescj deleteGoods" data-cart-id="<?php echo $v['id']; ?>"><img src="<?php echo env('APP_URL'); ?>/images/weixin/dele.png"></a>
+                <a href="javascript:void(0);" class="delescj deleteGoods" data-cart-id="<?php echo $v['id']; ?>"><img src="/weixins/images/dele.png"></a>
             </div>
             <!--商品属性，规格-->
             <p class="weight"></p>
@@ -62,7 +62,9 @@
         <div class="payit ma-to-20 payallb">
             <div class="radio fl">
                 <span class="che alltoggle checkFull" onclick="checkGoods(this)">
-                    <i></i>
+                    <i>
+                        <input name="checkFull" type="checkbox" style="display:block;">
+                    </i>
                 </span>
                 <span class="all">全选</span>
             </div>
@@ -202,6 +204,7 @@ $(function () {
 //勾选商品
 function checkGoods(obj)
 {
+    // alert('');
     if($(obj).hasClass('check_t'))
     {
         //改变颜色

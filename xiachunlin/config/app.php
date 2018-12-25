@@ -180,7 +180,7 @@ return [
          * 自制二维码 Simple
          */
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
-        'Maatwebsite\Excel\ExcelServiceProvider', //Excel导入导出 By FLi
+        Maatwebsite\Excel\ExcelServiceProvider::class, //Excel导入导出 By FLi
         Intervention\Image\ImageServiceProvider::class
     ],
 

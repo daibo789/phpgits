@@ -94,7 +94,7 @@ $(function(){
 function getbonus(bonus_id)
 {
     var url = '<?php echo http_host(true).'/api/user_bonus_add'; ?>';
-    var access_token = '<?php if(isset($_SESSION['weixin_user_info']['access_token'])){echo $_SESSION['weixin_user_info']['access_token'];} ?>';
+    var access_token = '<?php if(isset($weixin_user_info['access_token'])){echo $weixin_user_info['access_token'];} ?>';
     if(access_token=='')
     {
         //提示

@@ -15,7 +15,7 @@ class CartLogic extends BaseLogic
     
     public function getModel()
     {
-        return model('Cart');
+        return model('Admin\\Cart');
     }
     
     public function getValidate($data, $scene_name)
@@ -30,10 +30,10 @@ class CartLogic extends BaseLogic
     {
         $model = $this->getModel()->getDb();
         
-        $model = $model->join('goods', 'goods.id', '=', 'cart.goods_id')
-            ->where('cart.user_id', $where['user_id'])
-            ->where('goods.status', Goods::GOODS_NORMAL_STATUS)
-            ->select('cart.*','goods.id as goods_id','goods.title','goods.sn','goods.price as goods_price','goods.market_price','goods.litpic','goods.goods_number as stock','goods.promote_start_date','goods.promote_price','goods.promote_end_date');
+        $model = $model->join('goods', 'goods.id', '=', 'carts.goods_id')
+            ->where('carts.user_id', $where['user_id'])
+            ->where('goods.status', Good::GOODS_NORMAL_STATUS)
+            ->select('carts.*','goods.id as goods_id','goods.title','goods.sn','goods.price as goods_price','goods.market_price','goods.litpic','goods.goods_number as stock','goods.promote_start_date','goods.promote_price','goods.promote_end_date');
             
         $res['count'] = $model->count();
         $res['list'] = array();
@@ -45,13 +45,13 @@ class CartLogic extends BaseLogic
             foreach ($res['list'] as $k => $v) 
             {
                 $res['list'][$k]->is_promote = 0;
-                if(model('Goods')->bargain_price($v->goods_price,$v->promote_start_date,$v->promote_end_date) > 0){$res['list'][$k]->is_promote = 1;}
+                if(model('Admin\\Good')->bargain_price($v->goods_price,$v->promote_start_date,$v->promote_end_date) > 0){$res['list'][$k]->is_promote = 1;}
                 
                 //订货数量大于0
                 if ($v->goods_number > 0)
                 {
                     $goods_tmp = ['price'=>$v->goods_price,'promote_price'=>$v->promote_price,'promote_start_date'=>$v->promote_start_date,'promote_end_date'=>$v->promote_end_date];
-                    $res['list'][$k]->final_price = model('Goods')->get_goods_final_price((object)$goods_tmp);   //商品最终价格
+                    $res['list'][$k]->final_price = model('Admin\\Good')->get_goods_final_price((object)$goods_tmp);   //商品最终价格
                     $res['list'][$k]->goods_detail_url = route('weixin_goods_detail',array('id'=>$v->goods_id));
                     
                     //更新购物车中的商品数量

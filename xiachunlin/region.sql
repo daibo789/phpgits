@@ -1,14 +1,3 @@
-# ************************************************************
-# Sequel Pro SQL dump
-# Version 4541
-#
-# http://www.sequelpro.com/
-# https://github.com/sequelpro/sequelpro
-#
-# Host: localhost (MySQL 5.7.23)
-# Database: lqycms
-# Generation Time: 2018-12-20 09:27:27 +0000
-# ************************************************************
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -20,12 +9,12 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-# Dump of table fl_region
+# Dump of table region
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `fl_region`;
+DROP TABLE IF EXISTS `region`;
 
-CREATE TABLE `fl_region` (
+CREATE TABLE `region` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL DEFAULT '' COMMENT '名称',
   `parent_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '父级id',
@@ -38,10 +27,10 @@ CREATE TABLE `fl_region` (
   KEY `parent_id` (`parent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC COMMENT='地区表';
 
-LOCK TABLES `fl_region` WRITE;
-/*!40000 ALTER TABLE `fl_region` DISABLE KEYS */;
+LOCK TABLES `region` WRITE;
+/*!40000 ALTER TABLE `region` DISABLE KEYS */;
 
-INSERT INTO `fl_region` (`id`, `name`, `parent_id`, `type`, `sort_name`, `is_oversea`, `area_code`, `status`)
+INSERT INTO `region` (`id`, `name`, `parent_id`, `type`, `sort_name`, `is_oversea`, `area_code`, `status`)
 VALUES
 	(1,'北京',86,1,'',0,'',1),
 	(2,'上海',86,1,'',0,'',1),
@@ -8061,7 +8050,7 @@ VALUES
 	(11177,'阿得博乡',2329,4,'',0,'',1),
 	(11178,'沙依坡乡',2329,4,'',0,'',1);
 
-INSERT INTO `fl_region` (`id`, `name`, `parent_id`, `type`, `sort_name`, `is_oversea`, `area_code`, `status`)
+INSERT INTO `region` (`id`, `name`, `parent_id`, `type`, `sort_name`, `is_oversea`, `area_code`, `status`)
 VALUES
 	(11179,'马鞍底乡',2329,4,'',0,'',1),
 	(11180,'铜厂乡',2329,4,'',0,'',1),
@@ -15686,7 +15675,7 @@ VALUES
 	(18995,'隐贤镇',1207,4,'',0,'',1),
 	(18996,'众兴镇',1207,4,'',0,'',1);
 
-INSERT INTO `fl_region` (`id`, `name`, `parent_id`, `type`, `sort_name`, `is_oversea`, `area_code`, `status`)
+INSERT INTO `region` (`id`, `name`, `parent_id`, `type`, `sort_name`, `is_oversea`, `area_code`, `status`)
 VALUES
 	(18997,'保义镇',1207,4,'',0,'',1),
 	(18998,'丰庄镇',1207,4,'',0,'',1),
@@ -23333,7 +23322,7 @@ VALUES
 	(27423,'洲上乡',1876,4,'',0,'',1),
 	(27424,'洋湖乡',1876,4,'',0,'',1);
 
-INSERT INTO `fl_region` (`id`, `name`, `parent_id`, `type`, `sort_name`, `is_oversea`, `area_code`, `status`)
+INSERT INTO `region` (`id`, `name`, `parent_id`, `type`, `sort_name`, `is_oversea`, `area_code`, `status`)
 VALUES
 	(27425,'吴城乡',1876,4,'',0,'',1),
 	(27426,'瑞州街道',1877,4,'',0,'',1),
@@ -31026,7 +31015,7 @@ VALUES
 	(35634,'中北街道',457,4,'',0,'',1),
 	(35635,'鹤壁集镇',457,4,'',0,'',1);
 
-INSERT INTO `fl_region` (`id`, `name`, `parent_id`, `type`, `sort_name`, `is_oversea`, `area_code`, `status`)
+INSERT INTO `region` (`id`, `name`, `parent_id`, `type`, `sort_name`, `is_oversea`, `area_code`, `status`)
 VALUES
 	(35636,'姬家山乡',457,4,'',0,'',1),
 	(35637,'湖滨区',495,3,'',0,'',1),
@@ -38719,7 +38708,7 @@ VALUES
 	(44304,'闫庄乡',339,4,'',0,'',1),
 	(44305,'沾尚镇',339,4,'',0,'',1);
 
-INSERT INTO `fl_region` (`id`, `name`, `parent_id`, `type`, `sort_name`, `is_oversea`, `area_code`, `status`)
+INSERT INTO `region` (`id`, `name`, `parent_id`, `type`, `sort_name`, `is_oversea`, `area_code`, `status`)
 VALUES
 	(44306,'赵壁乡',339,4,'',0,'',1),
 	(44307,'城区',345,4,'',0,'',1),
@@ -46271,7 +46260,7 @@ VALUES
 	(53140,'三陟市',53128,2,'SUK',1,'',1),
 	(53141,'束草市',53128,2,'SHO',1,'',1);
 
-INSERT INTO `fl_region` (`id`, `name`, `parent_id`, `type`, `sort_name`, `is_oversea`, `area_code`, `status`)
+INSERT INTO `region` (`id`, `name`, `parent_id`, `type`, `sort_name`, `is_oversea`, `area_code`, `status`)
 VALUES
 	(53142,'太白市',53128,2,'TBK',1,'',1),
 	(53143,'铁原郡',53128,2,'CWN',1,'',1),
@@ -48895,7 +48884,7 @@ VALUES
 	(55761,'翁贝拉-姆波科',55744,2,'MP',1,'',1),
 	(55762,'下科托',55744,2,'BK',1,'',1);
 
-/*!40000 ALTER TABLE `fl_region` ENABLE KEYS */;
+/*!40000 ALTER TABLE `region` ENABLE KEYS */;
 UNLOCK TABLES;
 
 

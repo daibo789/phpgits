@@ -169,7 +169,7 @@ class Region extends BaseModel
     public function getRegionName($where)
     {
         if(empty($where)){return '';}
-
+//        dd($this->getDb()->where($where)->get());
         return $this->getDb()->where($where)->value('name');
     }
 }

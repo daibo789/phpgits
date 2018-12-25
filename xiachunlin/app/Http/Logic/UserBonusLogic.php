@@ -34,7 +34,7 @@ class UserBonusLogic extends BaseLogic
             foreach($res['list'] as $k=>$v)
             {
                 $res['list'][$k] = $this->getDataView($v);
-                $res['list'][$k]->bonus = model('Bonus')->getOne(['id'=>$v->bonus_id]);
+                $res['list'][$k]->bonus = model('Admin\\Bonus')->getOne(['id'=>$v->bonus_id]);
             }
         }
         
@@ -95,7 +95,7 @@ class UserBonusLogic extends BaseLogic
         
         $data['get_time'] = time(); //优惠券获取时间
         
-        $bonus = model('Bonus')->getOne(['id'=>$data['bonus_id']]);
+        $bonus = model('Admin\\Bonus')->getOne(['id'=>$data['bonus_id']]);
         if(!$bonus){return ReturnData::create(ReturnData::PARAMS_ERROR,null,'亲，您来晚了啦，已被抢光了');}
         if($bonus->num==-1 || $bonus->num>0){}else{return ReturnData::create(ReturnData::PARAMS_ERROR,null,'亲，您来晚了啦，已被抢光了');}
         
@@ -104,7 +104,7 @@ class UserBonusLogic extends BaseLogic
         $res = $this->getModel()->add($data,$type);
         if($res)
         {
-            if($bonus->num>0){model('Bonus')->getDb()->where(array('id'=>$data['bonus_id']))->decrement('num', 1);}
+            if($bonus->num>0){model('Admin\\Bonus')->getDb()->where(array('id'=>$data['bonus_id']))->decrement('num', 1);}
             return ReturnData::create(ReturnData::SUCCESS,$res);
         }
         
@@ -174,16 +174,16 @@ class UserBonusLogic extends BaseLogic
     
     public function getUserBonusByid(array $param)
     {
-        $where['user_bonus.user_id'] = $param['user_id'];
-        $where['bonus.status'] = 0;
-        $where['user_bonus.id'] = $param['user_bonus_id'];
+        $where['user_bonuses.user_id'] = $param['user_id'];
+        $where['bonuses.status'] = 0;
+        $where['user_bonuses.id'] = $param['user_bonus_id'];
         
-        $model = model('UserBonus')->getDb();
-        if(isset($param['min_amount'])){$model = $model->where('bonus.min_amount', '<=', $param['min_amount'])->where('bonus.money', '<=', $param['min_amount']);} //满多少使用
-        $model = $model->where('bonus.end_time', '>=', date('Y-m-d H:i:s')); //有效期
+        $model = model('Admin\\UserBonus')->getDb();
+        if(isset($param['min_amount'])){$model = $model->where('bonuses.min_amount', '<=', $param['min_amount'])->where('bonuses.money', '<=', $param['min_amount']);} //满多少使用
+        $model = $model->where('bonuses.end_time', '>=', date('Y-m-d H:i:s')); //有效期
         
-        $bonus = $model->join('bonus', 'bonus.id', '=', 'user_bonus.bonus_id')->where($where)
-            ->select('bonus.*', 'user_bonus.user_id', 'user_bonus.used_time', 'user_bonus.get_time', 'user_bonus.status as user_bonus_status', 'user_bonus.id as user_bonus_id')
+        $bonus = $model->join('bonuses', 'bonuses.id', '=', 'user_bonuses.bonus_id')->where($where)
+            ->select('bonuses.*', 'user_bonuses.user_id', 'user_bonuses.used_time', 'user_bonuses.get_time', 'user_bonuses.status as user_bonus_status', 'user_bonuses.id as user_bonus_id')
             ->first();
         
         return $bonus;

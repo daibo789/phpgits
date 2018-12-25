@@ -86,9 +86,10 @@ class CartController extends CommonController
     //删除
     public function cartDelete(Request $request)
     {
-        if(!checkIsNumber($request->input('id',null))){return ReturnData::create(ReturnData::PARAMS_ERROR);}
-        $id = $request->input('id');
 
+
+        if(!is_array($request->input('id',null))){return ReturnData::create(ReturnData::PARAMS_ERROR);}
+        $id = $request->input('id');
         if(Helper::isPostRequest())
         {
             $where['id'] = $id;

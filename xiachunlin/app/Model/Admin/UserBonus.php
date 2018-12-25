@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Model\Admin;
+use App\Http\Model\BaseModel;
 use DB;
+use Faker\Provider\Base;
 use Log;
-use Illuminate\Database\Eloquent\Model;
 
-class UserBonus extends Model
+
+class UserBonus extends BaseModel
 {
     //用户优惠券
 

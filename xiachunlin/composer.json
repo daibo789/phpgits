@@ -15,7 +15,8 @@
         "overtrue/laravel-wechat": "~4.0",
         "overtrue/wechat": "~4.1",
         "predis/predis": "^1.1",
-        "simplesoftwareio/simple-qrcode": "1.3.*"
+        "simplesoftwareio/simple-qrcode": "1.3.*",
+        "symfony/css-selector": "3.4.4"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -31,7 +31,7 @@ class CartController extends CommonController
         $url = http_host(true)."/api/cart_list";
         $res = curl_request($url,$postdata,'GET');
         $data['list'] = $res['data']['list'];
-
+//        dd($res);
         //猜你喜欢商品列表
         $postdata = array(
             'limit'  => 4,
@@ -119,6 +119,10 @@ class CartController extends CommonController
     //生成订单
     public function cartDone(Request $request)
     {
+        $weixin_user_info = $this->userManager->getUserInfo();
+        $data['weixin_user_info'] = $weixin_user_info;
+
+
         $cartids = $request->input('cartids',''); //购物车商品id，8_9
         $default_address_id = $request->input('default_address_id',''); //收货地址id
         //$payid = $request->input('payid',''); //支付方式：1余额支付，2微信，3支付宝
@@ -138,9 +142,9 @@ class CartController extends CommonController
             'user_bonus_id' => $user_bonus_id,
             'shipping_costs' => $shipping_costs,
             'message' => $message,
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $weixin_user_info['access_token']
         );
-        $url = env('APP_API_URL')."/order_add";
+        $url = http_host(true)."/api/order_add";
         $res = curl_request($url,$postdata,'POST');
 
         if($res['code'] == ReturnData::SUCCESS)

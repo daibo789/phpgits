@@ -30,7 +30,7 @@ class BonusController extends CommonController
         $url =http_host(true)."/api/bonus_list";
         $res = curl_request($url,$postdata,'GET');
         $data['list'] = $res['data']['list'];
-
+//        dd($postdata);
         $data['totalpage'] = ceil($res['data']['count']/$pagesize);
 
         if(isset($_REQUEST['page_ajax']) && $_REQUEST['page_ajax']==1)

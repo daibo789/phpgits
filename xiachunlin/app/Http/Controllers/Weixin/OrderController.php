@@ -35,6 +35,7 @@ class OrderController extends CommonController
             'status' => $status, //0或者不传表示全部，1待付款，2待发货,3待收货,4待评价,5退款/售后
             'access_token' => $weixin_user_info['access_token']
         );
+//        dd($postdata);
         $url = http_host(true)."/api/order_list";
         $res = curl_request($url,$postdata,'GET');
         $data['list'] = $res['data']['list'];
@@ -49,7 +50,7 @@ class OrderController extends CommonController
             {
                 foreach($res['data']['list'] as $k => $v)
                 {
-                    $html .= '<li><a href="'.$v['goods']['goods_detail_url'].'"><span class="goods_thumb"><img alt="'.$v['goods']['title'].'" src="'.env('APP_URL').$v['goods']['litpic'].'"></span></a>';
+                    $html .= '<li><a href="'.$v['goods']['goods_detail_url'].'"><span class="goods_thumb"><img alt="'.$v['goods']['title'].'" src="'.http_host(true).$v['goods']['litpic'].'"></span></a>';
                     $html .= '<div class="goods_info"><p class="goods_tit">'.$v['goods']['title'].'</p>';
                     $html .= '<p class="goods_price">￥<b>'.$v['goods']['price'].'</b></p>';
                     $html .= '<p class="goods_des fr"><span id="del_history" onclick="delconfirm(\''.route('weixin_user_goods_history_delete',array('id'=>$v['id'])).'\')">删除</span></p>';
@@ -66,15 +67,17 @@ class OrderController extends CommonController
     //订单详情
     public function orderDetail(Request $request)
     {
+        $weixin_user_info = $this->userManager->getUserInfo();
+        $data['weixin_user_info'] = $weixin_user_info;
         $id = $request->input('id','');
-
         $postdata = array(
             'id'  => $id,
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $weixin_user_info['access_token']
         );
-        $url = env('APP_API_URL')."/order_detail";
+        $url = http_host(true)."/api/order_detail";
         $res = curl_request($url,$postdata,'GET');
         $data['post'] = $res['data'];
+//        dd($res);
         if(empty($data['post'])){$this->error_jump('订单不存在');}
 
         return view('weixin.order.orderDetail', $data);
@@ -83,6 +86,9 @@ class OrderController extends CommonController
     //订单评价
     public function orderComment(Request $request)
     {
+        $weixin_user_info = $this->userManager->getUserInfo();
+        $data['weixin_user_info'] = $weixin_user_info;
+
         if(Helper::isPostRequest())
         {
             if($_POST['comment'])
@@ -101,9 +107,9 @@ class OrderController extends CommonController
             $postdata = array(
                 'order_id' => $_POST['order_id'],
                 'comment' => json_encode($_POST['comment']),
-                'access_token' => $_SESSION['weixin_user_info']['access_token']
+                'access_token' => $weixin_user_info['access_token']
             );
-            $url = env('APP_API_URL')."/comment_batch_add";
+            $url = http_host(true)."/api/comment_batch_add";
             $res = curl_request($url,$postdata,'POST');
             if($res['code']!=0){$this->error_jump('评论失败');}
 
@@ -117,9 +123,9 @@ class OrderController extends CommonController
             'id' => $id,
             'order_status' => 3,
             'refund_status' => 0,
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $weixin_user_info['access_token']
         );
-        $url = env('APP_API_URL')."/order_detail";
+        $url = http_host(true)."/api/order_detail";
         $res = curl_request($url,$postdata,'GET');
         $data['post'] = $res['data'];
         if(empty($data['post'])){$this->error_jump('您访问的页面不存在或已被删除！');}
@@ -128,16 +134,22 @@ class OrderController extends CommonController
     }
 
     //订单支付
-    public function pay($id)
+    public function pay(Request $request)
     {
+
+        $id = $request->input('id','');
+        $weixin_user_info = $this->userManager->getUserInfo();
+        $data['weixin_user_info'] = $weixin_user_info;
+
         //获取订单详情
         $postdata = array(
             'id' => $id, //要支付的订单id
             'order_status' => 0,
             'pay_status' => 0,
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $weixin_user_info['access_token']
         );
-        $url = env('APP_API_URL')."/order_detail";
+
+        $url = http_host(true)."/api/order_detail";
         $res = curl_request($url,$postdata,'GET');
         $data['order_detail'] = $res['data'];
         $data['order_id'] = $id;
@@ -146,11 +158,12 @@ class OrderController extends CommonController
 
         //获取会员信息
         $postdata = array(
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $weixin_user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_info";
+        $url = http_host(true)."/api/user_info";
         $res = curl_request($url,$postdata,'GET');
         $data['user_info'] = $res['data'];
+
 
         //判断余额是否足够
         $is_balance_enough = 1; //足够
@@ -162,6 +175,7 @@ class OrderController extends CommonController
 
     public function dopay(Request $request)
     {
+//        dd($request->all());
         $order_id = $request->input('order_id','');
         $payment_id = $request->input('payment_id','');
 
@@ -195,15 +209,19 @@ class OrderController extends CommonController
     //订单余额支付
     public function orderYuepay(Request $request)
     {
-        $order_id = $request->input('order_id','');
+        $weixin_user_info = $this->userManager->getUserInfo();
+        $data['weixin_user_info'] = $weixin_user_info;
 
+        $order_id = $request->input('order_id','');
         //修改订单状态
         $postdata = array(
             'id' => $order_id,
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $weixin_user_info['access_token']
         );
-        $url = env('APP_API_URL')."/order_yue_pay";
+//        dd($postdata);
+        $url = http_host(true)."/api/order_yue_pay";
         $res = curl_request($url,$postdata,'POST');
+
         if($res['code']==ReturnData::SUCCESS){$this->success_jump('支付成功',route('weixin_order_list'));}
 
         $this->error_jump('支付失败');
@@ -212,6 +230,8 @@ class OrderController extends CommonController
     //订单-微信支付
     public function orderWxpay(Request $request)
     {
+        $weixin_user_info = $this->userManager->getUserInfo();
+        $data['weixin_user_info'] = $weixin_user_info;
         $order_id = $request->input('order_id','');
 
         //获取订单详情
@@ -219,9 +239,9 @@ class OrderController extends CommonController
             'id' => $order_id, //要支付的订单id
             'order_status' => 0,
             'pay_status' => 0,
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $weixin_user_info['access_token']
         );
-        $url = env('APP_API_URL')."/order_detail";
+        $url = http_host(true)."/api/order_detail";
         $res = curl_request($url,$postdata,'GET');
         if($res['code']!=0){$this->error_jump('订单不存在或已过期');}
         $data['order_detail'] = $res['data'];

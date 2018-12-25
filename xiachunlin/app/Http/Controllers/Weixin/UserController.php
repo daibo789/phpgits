@@ -358,7 +358,7 @@ class UserController extends CommonController
         $url = http_host(true)."/api/user_point_list";
         $res = curl_request($url,$postdata,'GET');
         $data['list'] = $res['data']['list'];
-
+//        dd($res);
         $data['totalpage'] = ceil($res['data']['count']/$pagesize);
 
         if(isset($_REQUEST['page_ajax']) && $_REQUEST['page_ajax']==1)
@@ -409,7 +409,7 @@ class UserController extends CommonController
         $url = http_host(true)."/api/user_bonus_list";
         $res = curl_request($url,$postdata,'GET');
         $data['list'] = $res['data']['list'];
-
+//        dd($postdata);
         $data['totalpage'] = ceil($res['data']['count']/$pagesize);
 
         if(isset($_REQUEST['page_ajax']) && $_REQUEST['page_ajax']==1)
@@ -500,7 +500,7 @@ class UserController extends CommonController
         $url = http_host(true)."/api/user_goods_history_list";
         $res = curl_request($url,$postdata,'GET');
         $data['user_goods_history'] = $res['data']['list'];
-
+//        dd($postdata);
         $data['totalpage'] = ceil($res['data']['count']/$pagesize);
 
         if(isset($_REQUEST['page_ajax']) && $_REQUEST['page_ajax']==1)
@@ -528,15 +528,17 @@ class UserController extends CommonController
     //浏览记录删除
     public function userGoodsHistoryDelete(Request $request)
     {
+        $user_info =  session('weixin_user_info');
+        $data['weixin_user_info'] = $user_info;
         $id = $request->input('id','');
 
         if($id == ''){$this->error_jump(ReturnData::PARAMS_ERROR);}
 
         $postdata = array(
             'id' => $id,
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_goods_history_delete";
+        $url = http_host(true)."/api/user_goods_history_delete";
         $res = curl_request($url,$postdata,'POST');
 
         if($res['code'] != ReturnData::SUCCESS){$this->error_jump(ReturnCode::FAIL);}
@@ -547,10 +549,13 @@ class UserController extends CommonController
     //浏览记录清空
     public function userGoodsHistoryClear(Request $request)
     {
+        $user_info =  session('weixin_user_info');
+        $data['weixin_user_info'] = $user_info;
+
         $postdata = array(
-            'access_token' => $_SESSION['weixin_user_info']['access_token']
+            'access_token' => $user_info['access_token']
         );
-        $url = env('APP_API_URL')."/user_goods_history_clear";
+        $url =  http_host(true)."/api/user_goods_history_clear";
         $res = curl_request($url,$postdata,'POST');
 
         if($res['code'] != ReturnData::SUCCESS){$this->error_jump(ReturnCode::FAIL);}

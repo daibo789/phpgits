@@ -16,6 +16,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//公共
+include_once 'compubic/wab.php';
 //我的wap端
 include_once 'wap/web.php';
 //后台
