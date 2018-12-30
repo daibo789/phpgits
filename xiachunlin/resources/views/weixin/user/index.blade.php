@@ -5,7 +5,7 @@
 <script type="text/javascript" src="/weixins/js/mobile.js"></script></head><body>
 <div class="myhearder" style="background:#ec5151;color:#fff;">
     <div class="person">
-        <div class="personicon">
+        <div class="personicon">R
             <a href="<?php echo route('weixin_userinfo'); ?>"><img src="<?php echo $user_info['head_img']; ?>" onerror="this.src='/weixins/images/no_user.jpg'"></a>
         </div>
         <div class="lors">

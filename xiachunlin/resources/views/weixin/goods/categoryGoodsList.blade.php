@@ -60,7 +60,7 @@ var swiper = new Swiper('.swiper-nav', {
         <?php if($list){ ?>
         <ul class="goods_list_small" id="goods_list">
         <?php foreach($list as $k=>$v){ ?>
-            <li><a href="<?php echo $v['goods_detail_url']; ?>"><img class="imgzsy" alt="<?php echo $v['title']; ?>" src="<?php echo $v['litpic']; ?>"><div class="goods_info"><p class="goods_tit"><?php if($v['is_promote_goods']>0){ ?><span class="badge_comm" style="background-color:#f23030;">Hot</span> <?php } ?><?php echo $v['title']; ?></p><div class="goods_price">￥<b><?php echo $v['price']; ?></b></div></div></a></li>
+            <li><a href="{{route('weixin_goods_detail',array('id'=>$v['id']))}}"><img class="imgzsy" alt="<?php echo $v['title']; ?>" src="<?php echo $v['litpic']; ?>"><div class="goods_info"><p class="goods_tit"><?php if($v['is_promote_goods']>0){ ?><span class="badge_comm" style="background-color:#f23030;">Hot</span> <?php } ?><?php echo $v['title']; ?></p><div class="goods_price">￥<b><?php echo $v['price']; ?></b></div></div></a></li>
         <?php } ?>
         </ul>
         <?php }else{ ?>

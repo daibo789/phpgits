@@ -8,7 +8,7 @@
 
 
 //前台路由
-Route::group(['prefix' => '/','namespace' => 'Home'], function () {
+Route::group(['prefix' => '/homo','namespace' => 'Home'], function () {
     Route::get('/', 'IndexController@index')->name('home');
     Route::get('/about', 'AboutController@index')->name('home_about');          //关于
     Route::get('/staff', 'StaffController@index')->name('home_staff');           //员工

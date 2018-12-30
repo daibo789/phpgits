@@ -22,5 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TaglistsTableSeeder::class);
         $this->call(User_ranksTableSeeder::class);
         $this->call(WeixinMenuTableSeeder::class);
+        $this->call(PaymentsTableSeeder::class);
+        $this->call(KuaidisTableSeeder::class);
     }
 }

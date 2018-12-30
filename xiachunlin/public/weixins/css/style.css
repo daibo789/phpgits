@@ -589,7 +589,7 @@ display: block
 }
 
 .my .content .floor ul li a span {
-background-color: rgba(217,81,99,0.9);
+background-color: rgba(100,140,233,0.9);
 border-radius: 50%;
 font-size:14px;
 width:24px;
@@ -614,7 +614,7 @@ font-size:18px;
 font-weight: normal;
 height:32px;
 line-height:32px;
-color: #e3110b
+color: #2E2D3C;
 }
 
 .my .content .floor ul li a p {
@@ -664,7 +664,7 @@ background-image: inherit
 margin:15px 20px
 }
 
-.setting .close a{display: block;background: #ec5151;text-align: center;padding:10px;color: #fff;font-size:18px;border-radius:2px;}
+.setting .close a{display: block;background: #2E2D3C;text-align: center;padding:10px;color: #fff;font-size:18px;border-radius:2px;}
 
 h1.arc_tit, h2.arc_tit{font-weight: normal;font-size: 1.4em;padding: 10px;}
 .arc_content .ainfo{color:#999;}
@@ -780,7 +780,7 @@ position: relative;
 padding: 0 10px 0 10px;
 font-size:16px;
 color: #666;
-border-left: 3px solid #FF0036;border-bottom: 1px solid #f4f4f4;}
+border-left: 3px solid #2E2D3C;border-bottom: 1px solid #f4f4f4;}
 .goods-content .module-content{padding:10px;}
 
 .bottom_tool_black{ width:100%; display:block; position:fixed; bottom:0;background-color:#fff;border-top:1px solid #f1f1f1;z-index:2;}

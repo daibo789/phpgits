@@ -640,6 +640,7 @@ class UserController extends CommonController
             );
             $url = http_host(true)."/api/wx_login";
             $res = curl_request($url,$postdata,'POST');
+//            dd($postdata);
             if(($res['code'] != ReturnData::SUCCESS)||!$res){
                 $this->error_jump('登录失败');
             }

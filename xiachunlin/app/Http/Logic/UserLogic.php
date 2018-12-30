@@ -267,9 +267,9 @@ class UserLogic extends BaseLogic
         if($res === false){return ReturnData::create(ReturnData::SYSTEM_FAIL);}
         //生成token
         $token = Token::getToken(Token::TYPE_WEIXIN, $res);
-//        dd($token);
+//        dd($res);
         $data['token'] = $token['access_token'];
-        $this->getModel()->edit(array('token'=>$data['token']),array('id'=>$res));
+//        $this->getModel()->edit(array('token'=>$data['token']),array('id'=>$res));
         
         return ReturnData::create(ReturnData::SUCCESS,$token, '注册成功');
     }

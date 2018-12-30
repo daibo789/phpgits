@@ -30,3 +30,5 @@ include_once 'shop/web.php';
 include_once 'api/web.php';
 //微信
 include_once 'weixin/web.php';
+//个人网
+include_once 'mine/web.php';
